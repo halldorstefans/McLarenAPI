@@ -16,7 +16,7 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_AllDrivers()
         {
-            var response = await _client.GetAsync("/api/f1/Driver");
+            var response = await _client.GetAsync("/api/formula1/v1/Driver");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var Drivers = JsonConvert.DeserializeObject<IEnumerable<DriverDto>>(await response.Content.ReadAsStringAsync());
@@ -26,7 +26,7 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_OneDriverFromLastName()
         {
-            var response = await _client.GetAsync("/api/f1/Driver/van_rooyen");
+            var response = await _client.GetAsync("/api/formula1/v1/Driver/van_rooyen");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var Drivers = JsonConvert.DeserializeObject<IEnumerable<DriverDto>>(await response.Content.ReadAsStringAsync());
@@ -39,14 +39,14 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_NotFoundFromLastName()
         {
-            var response = await _client.GetAsync("/api/f1/Driver/hamilton");
+            var response = await _client.GetAsync("/api/formula1/v1/Driver/hamilton");
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
         public async void Get_Should_Return_DriversFromId()
         {
-            var response = await _client.GetAsync("/api/f1/Driver/1");
+            var response = await _client.GetAsync("/api/formula1/v1/Driver/1");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var driver = JsonConvert.DeserializeObject<DriverDto>(await response.Content.ReadAsStringAsync());
@@ -56,7 +56,7 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_NotFoundFromId()
         {
-            var response = await _client.GetAsync("/api/f1/Driver/100");
+            var response = await _client.GetAsync("/api/formula1/v1/Driver/100");
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }

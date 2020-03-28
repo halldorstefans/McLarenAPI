@@ -1,3 +1,6 @@
+using System;
+using System.IO;
+using System.Reflection;
 using System.Text.Json.Serialization;
 using McLaren.Core.Interfaces;
 using McLaren.Core.Interfaces.Repositories;
@@ -6,11 +9,13 @@ using McLaren.Infrastructure.Data;
 using McLaren.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace McLaren.Web
 {
@@ -47,11 +52,39 @@ namespace McLaren.Web
                 var logger = container.GetRequiredService<ILogger<LogService>>();
                 return new LogService() { Logger = logger };
             });        
+
+            services.AddApiVersioning(
+                options =>
+                {
+                    options.ReportApiVersions = true;
+
+                    options.Conventions.Add(new VersionByNamespaceConvention());
+                });
+
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "McLaren API", Version = "v1" });
+
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+                c.IncludeXmlComments(xmlPath);
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            app.UseSwagger(c =>
+            {
+                c.RouteTemplate = "docs/{documentName}/docs.json";
+            });
+
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/docs/v1/docs.json", "McLaren API V1");
+                c.RoutePrefix = "docs";
+            });
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

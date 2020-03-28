@@ -16,7 +16,7 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_AllGrandPrixs()
         {
-            var response = await _client.GetAsync("/api/f1/GrandPrix");
+            var response = await _client.GetAsync("/api/formula1/v1/GrandPrix");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var GrandPrixs = JsonConvert.DeserializeObject<IEnumerable<GrandPrixDto>>(await response.Content.ReadAsStringAsync());
@@ -26,7 +26,7 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_GrandPrixsFromYear()
         {
-            var response = await _client.GetAsync("/api/f1/GrandPrix/1969");
+            var response = await _client.GetAsync("/api/formula1/v1/GrandPrix/1969");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
 
             var GrandPrixs = JsonConvert.DeserializeObject<IEnumerable<GrandPrixDto>>(await response.Content.ReadAsStringAsync());
@@ -36,14 +36,14 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_NotFoundFromYear()
         {
-            var response = await _client.GetAsync("/api/f1/GrandPrix/1950");
+            var response = await _client.GetAsync("/api/formula1/v1/GrandPrix/1950");
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
 
         [Fact]
         public async void Get_Should_Return_NotFoundInvalidParameter()
         {
-            var response = await _client.GetAsync("/api/f1/GrandPrix/hello");
+            var response = await _client.GetAsync("/api/formula1/v1/GrandPrix/hello");
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }

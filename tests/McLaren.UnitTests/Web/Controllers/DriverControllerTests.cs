@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using McLaren.Core.Models;
 using McLaren.UnitTests.Mocks.Data;
 using McLaren.UnitTests.Mocks.Services;
-using McLaren.Web.Controller;
+using McLaren.Web.V1.Controller;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;

@@ -1,13 +1,16 @@
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using McLaren.Core.Interfaces;
+using McLaren.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace McLaren.Web.Controller
+namespace McLaren.Web.V1.Controller
 {
-    [Route("api/f1/[controller]")]
+    [Produces("application/json")]
     [ApiController]
+    [Route("api/formula1/v{version:apiVersion}/[controller]")]
     public class DriverController :  ControllerBase
     {
         private readonly IDriverService _driverService;
@@ -17,8 +20,13 @@ namespace McLaren.Web.Controller
             _driverService = driverService;
         }
 
+        /// <summary>
+        /// Lists all drivers
+        /// </summary>
+        /// <returns>A list of all the drivers</returns>
+        /// <response code="200">Returns the list of all drivers</response>
         [HttpGet]
-        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<DriverDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get()
         {
             try
@@ -38,9 +46,16 @@ namespace McLaren.Web.Controller
             }
         }
 
+        /// <summary>
+        /// Driver with specified id
+        /// </summary>
+        /// <param name="driverId"></param>
+        /// <returns>A driver with specified id</returns>
+        /// <response code="200">Returns the driver with the specified id</response>
+        /// <response code="404">If no driver was found with the specified id</response>
         [HttpGet("{driverId:int}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(DriverDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> Get(int driverId)
         {
             try
@@ -60,9 +75,16 @@ namespace McLaren.Web.Controller
             }            
         }
 
+        /// <summary>
+        /// Lists all driver with specified last name
+        /// </summary>
+        /// <param name="lastname"></param>
+        /// <returns>A list of all drivers with specified last name</returns>
+        /// <response code="200">Returns the list of all drivers with specified last name</response>
+        /// <response code="404">If no drivers were found with the specified last name</response>
         [HttpGet("{lastname:regex([[a-z]])}")]
-        [ProducesResponseType(StatusCodes.Status200OK)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(List<DriverDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> Get(string lastname)
         {
             try
