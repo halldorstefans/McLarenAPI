@@ -23,7 +23,14 @@ namespace McLaren.Web.Controller
         {
             try
             {
-                return new ObjectResult(await _driverService.GetAll());
+                var drivers = await _driverService.GetAll();
+
+                if (drivers == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(drivers);
             }
             catch (Exception ex)
             {
@@ -37,9 +44,9 @@ namespace McLaren.Web.Controller
         public async Task<IActionResult> Get(int driverId)
         {
             try
-            {
+            {                
                 var driver = await _driverService.GetById(driverId);
-
+                
                 if (driver == null)
                 {
                     return NotFound();
@@ -60,15 +67,14 @@ namespace McLaren.Web.Controller
         {
             try
             {
-                Console.WriteLine(lastname);
-                var driver = await _driverService.GetByLastName(lastname);
+                var drivers = await _driverService.GetByLastName(lastname.ToLower());
 
-                if (driver == null)
+                if (drivers == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(driver);
+                return Ok(drivers);
             }
             catch (Exception ex)
             {                

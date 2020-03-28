@@ -29,9 +29,13 @@ namespace McLaren.Core.Services
 
                 var driver = await _driverRepository.Get(id);
 
-                var driverDto = driver.Map();
+                if (driver != null)
+                {
+                    return driver.Map();
+                }
 
-                return driverDto;
+                return null;
+
             }
             catch (Exception ex)
             {
@@ -46,17 +50,17 @@ namespace McLaren.Core.Services
             {
                 _logger.LogInformation(LoggingEvents.GetItem, "Get Driver by LastName", lastName);
 
-                if (lastName.Contains("_"))
-                {
-                    lastName = lastName.Replace("_", " ");
-                    Console.WriteLine(lastName);
-                }
+                lastName = NameToTitleCase(lastName);
 
                 var driver = await _driverRepository.Find(d => d.lastName == lastName);
 
-                var driverDto = driver.Select(d => d.Map());
+                if (driver.Count() > 0)
+                {
+                    return driver.Select(d => d.Map());
+                }
 
-                return driverDto;
+                return null;
+              
             }
             catch (Exception ex)
             {
@@ -73,15 +77,46 @@ namespace McLaren.Core.Services
 
                 var drivers = await _driverRepository.GetAll();
 
-                var driversDto = drivers.Select(d => d.Map());
+                if (drivers.Count() > 0)
+                {
+                    return drivers.Select(d => d.Map());
+                }
 
-                return driversDto;
+                return null;
             }
             catch (Exception ex)
             {
                 _logger.LogError(LoggingEvents.ListItems, ex, ex.Message, null);
                 throw;
             }
+        }
+
+        private string NameToTitleCase(string lastName)
+        {
+            if (lastName == "mclaren")
+            {
+                lastName = lastName.Replace("m", "M").Replace("l", "L");
+            }
+
+            if (lastName.Contains("_"))
+            {
+                lastName = lastName.Replace("_", " ");
+                var splitLastNames = lastName.Split();
+                List<string> newLastNames = new List<string>();
+
+                foreach (var name in splitLastNames)
+                {
+                    var newname = name;
+                    if (newname != "de" && newname != "van")
+                    {                            
+                        newname = char.ToUpper(newname[0]) + ((newname.Length > 1) ? newname.Substring(1).ToLower() : string.Empty);                     
+                    }
+                    newLastNames.Add(newname);
+                }
+                lastName = string.Join(" ", newLastNames);
+            }
+
+            return lastName;
         }
     }
     

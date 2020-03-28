@@ -23,7 +23,13 @@ namespace McLaren.Web.Controller
         {
             try
             {
-                return new ObjectResult(await _carService.GetAll());
+                var cars = await _carService.GetAll();
+                if (cars == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(cars);
             }
             catch (Exception ex)
             {
@@ -38,14 +44,13 @@ namespace McLaren.Web.Controller
         {
             try
             {
-                var car = await _carService.GetByYear(year);
-
-                if (car == null)
+                var cars = await _carService.GetByYear(year);
+                if (cars == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(car);
+                return Ok(cars);
             }
             catch (Exception ex)
             {                
@@ -59,8 +64,8 @@ namespace McLaren.Web.Controller
         public async Task<IActionResult> Get(string name)
         {
             try
-            {
-                var car = new ObjectResult(await _carService.GetByName(name.ToUpper()));
+            {        
+                var car = await _carService.GetByName(name.ToUpper());
 
                 if (car == null)
                 {

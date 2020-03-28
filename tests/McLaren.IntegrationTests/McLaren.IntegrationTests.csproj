@@ -7,10 +7,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="3.1.2" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
     <PackageReference Include="xunit" Version="2.4.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.0" />
     <PackageReference Include="coverlet.collector" Version="1.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\McLaren.Core\McLaren.Core.csproj" />
+    <ProjectReference Include="..\..\src\McLaren.Infrastructure\McLaren.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\McLaren.Web\McLaren.Web.csproj" />
   </ItemGroup>
 
 </Project>

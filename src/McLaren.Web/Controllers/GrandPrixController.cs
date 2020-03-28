@@ -23,7 +23,14 @@ namespace McLaren.Web.Controller
         {
             try
             {
-                return new ObjectResult(await _grandPrixService.GetAll());
+                var grandsPrix = await _grandPrixService.GetAll();
+
+                if (grandsPrix == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(grandsPrix);
             }
             catch (Exception ex)
             {
@@ -38,14 +45,14 @@ namespace McLaren.Web.Controller
         {
             try
             {
-                var grandPrix = await _grandPrixService.GetByYear(year);
+                var grandsPrix = await _grandPrixService.GetByYear(year);
 
-                if (grandPrix == null)
+                if (grandsPrix == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(grandPrix);
+                return Ok(grandsPrix);
             }
             catch (Exception ex)
             {                

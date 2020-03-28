@@ -33,12 +33,22 @@ namespace McLaren.Core.Services
                 _logger.LogInformation(LoggingEvents.GetItem, "Get Grand Prix by Id", id);
 
                 var grandPrix = await _grandPrixRepository.Get(id);
-                var grandPrixDrivers = await _grandPrixRepository.Find(gp => gp.raceid == grandPrix.raceid);
 
-                var grandPrixDto = grandPrix.Map();
-                grandPrixDto.drivers = grandPrixDrivers.Select(gpd => gpd.MapDriver());
+                if (grandPrix != null)
+                {
+                    var grandPrixDrivers = await _grandPrixRepository.Find(gp => gp.raceid == grandPrix.raceid);
+
+                    var grandPrixDto = grandPrix.Map();
+
+                    if (grandPrixDrivers.Count() > 0)
+                    {
+                        grandPrixDto.drivers = grandPrixDrivers.Select(gpd => gpd.MapDriver());
+                    }
+
+                    return grandPrixDto;
+                }
                 
-                return grandPrixDto;
+                return null;
             }
             catch (Exception ex)
             {
@@ -55,7 +65,12 @@ namespace McLaren.Core.Services
 
                 var grandsPrix = await _grandPrixRepository.Find(gp => gp.year == year);                
 
-                return await GetGrandPrixDrivers(grandsPrix);
+                if (grandsPrix.Count() > 0)
+                {
+                    return await GetGrandPrixDrivers(grandsPrix);
+                }
+
+                return null;
             }
             catch (Exception ex)
             {
@@ -72,7 +87,12 @@ namespace McLaren.Core.Services
 
                 var grandsPrix = await _grandPrixRepository.GetAll();
 
-                return await GetGrandPrixDrivers(grandsPrix);
+                if (grandsPrix.Count() > 0)
+                {
+                    return await GetGrandPrixDrivers(grandsPrix);
+                }
+
+                return null;
             }
             catch (Exception ex)
             {

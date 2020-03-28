@@ -17,7 +17,7 @@ namespace McLaren.Infrastructure.Data.Repositories
 
         public async Task<IEnumerable<Car>> GetByYear(int year)
         {
-            return await _dbContext.Set<Car>().Where(c => c.fromyear <= year).Where(c => c.toyear >= year).ToListAsync();
+            return await _dbContext.Set<Car>().Where(c => c.fromyear <= year && c.toyear >= year).ToListAsync();
         }
     }
 }
