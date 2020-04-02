@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using McLaren.Core.Interfaces;
 using McLaren.Core.Models;
@@ -32,7 +33,7 @@ namespace McLaren.Web.V1.Controller
             try
             {
                 var cars = await _carService.GetAll();
-                if (cars == null)
+                if (cars.Count() == 0)
                 {
                     return NotFound();
                 }
@@ -61,7 +62,7 @@ namespace McLaren.Web.V1.Controller
             try
             {
                 var cars = await _carService.GetByYear(year);
-                if (cars == null)
+                if (cars.Count() == 0)
                 {
                     return NotFound();
                 }

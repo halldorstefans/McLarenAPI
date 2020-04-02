@@ -73,9 +73,7 @@ namespace McLaren.UnitTests.Web.Controllers
 
             var result = await controller.Get(mockDriverId);
 
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var Driver = okResult.Value.Should().BeNull();
-            mockDriverService.VerifyGetById(Times.Once());
+            var okResult = result.Should().BeOfType<NotFoundResult>().Subject;
         }
 
         [Fact]

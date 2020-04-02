@@ -110,9 +110,7 @@ namespace McLaren.UnitTests.Web.Controllers
 
             var result = await controller.Get(mockCarName);
 
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var car = okResult.Value.Should().BeNull();
-            mockCarService.VerifyGetByName(Times.Once());
+            var okResult = result.Should().BeOfType<NotFoundResult>().Subject;            
         }
     }
 }

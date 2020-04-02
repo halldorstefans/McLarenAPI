@@ -34,21 +34,21 @@ namespace McLaren.Core.Services
 
                 var grandPrix = await _grandPrixRepository.Get(id);
 
-                if (grandPrix != null)
+                if (grandPrix == null)
                 {
-                    var grandPrixDrivers = await _grandPrixRepository.Find(gp => gp.raceid == grandPrix.raceid);
-
-                    var grandPrixDto = grandPrix.Map();
-
-                    if (grandPrixDrivers.Count() > 0)
-                    {
-                        grandPrixDto.drivers = grandPrixDrivers.Select(gpd => gpd.MapDriver());
-                    }
-
-                    return grandPrixDto;
-                }
+                    return null;
+                }                
                 
-                return null;
+                var grandPrixDrivers = await _grandPrixRepository.Find(gp => gp.raceid == grandPrix.raceid);
+
+                var grandPrixDto = grandPrix.Map();
+
+                if (grandPrixDrivers.Count() > 0)
+                {
+                    grandPrixDto.drivers = grandPrixDrivers.Select(gpd => gpd.MapDriver());
+                }
+
+                return grandPrixDto;
             }
             catch (Exception ex)
             {
@@ -65,12 +65,12 @@ namespace McLaren.Core.Services
 
                 var grandsPrix = await _grandPrixRepository.Find(gp => gp.year == year);                
 
-                if (grandsPrix.Count() > 0)
+                if (grandsPrix.Count() == 0)
                 {
-                    return await GetGrandPrixDrivers(grandsPrix);
+                    return Enumerable.Empty<GrandPrixDto>();
                 }
 
-                return null;
+                return await GetGrandPrixDrivers(grandsPrix);
             }
             catch (Exception ex)
             {
@@ -87,12 +87,12 @@ namespace McLaren.Core.Services
 
                 var grandsPrix = await _grandPrixRepository.GetAll();
 
-                if (grandsPrix.Count() > 0)
+                if (grandsPrix.Count() == 0)
                 {
-                    return await GetGrandPrixDrivers(grandsPrix);
+                    return Enumerable.Empty<GrandPrixDto>();
                 }
 
-                return null;
+                return await GetGrandPrixDrivers(grandsPrix);
             }
             catch (Exception ex)
             {

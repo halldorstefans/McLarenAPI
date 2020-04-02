@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -34,7 +35,7 @@ namespace McLaren.Web.V1.Controller
             {
                 var grandsPrix = await _grandPrixService.GetAll();
 
-                if (grandsPrix == null)
+                if (grandsPrix.Count() == 0)
                 {
                     return NotFound();
                 }
@@ -63,7 +64,7 @@ namespace McLaren.Web.V1.Controller
             {
                 var grandsPrix = await _grandPrixService.GetByYear(year);
 
-                if (grandsPrix == null)
+                if (grandsPrix.Count() == 0)
                 {
                     return NotFound();
                 }

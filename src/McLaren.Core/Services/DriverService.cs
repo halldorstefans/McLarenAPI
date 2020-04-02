@@ -29,12 +29,12 @@ namespace McLaren.Core.Services
 
                 var driver = await _driverRepository.Get(id);
 
-                if (driver != null)
+                if (driver == null)
                 {
-                    return driver.Map();
+                    return null;
                 }
 
-                return null;
+                return driver.Map();
 
             }
             catch (Exception ex)
@@ -54,12 +54,12 @@ namespace McLaren.Core.Services
 
                 var driver = await _driverRepository.Find(d => d.lastName == lastName);
 
-                if (driver.Count() > 0)
+                if (driver.Count() == 0)
                 {
-                    return driver.Select(d => d.Map());
+                    return Enumerable.Empty<DriverDto>();
                 }
 
-                return null;
+                return driver.Select(d => d.Map());
               
             }
             catch (Exception ex)
@@ -77,12 +77,12 @@ namespace McLaren.Core.Services
 
                 var drivers = await _driverRepository.GetAll();
 
-                if (drivers.Count() > 0)
+                if (drivers.Count() == 0)
                 {
-                    return drivers.Select(d => d.Map());
+                    return Enumerable.Empty<DriverDto>();
                 }
 
-                return null;
+                return drivers.Select(d => d.Map());
             }
             catch (Exception ex)
             {

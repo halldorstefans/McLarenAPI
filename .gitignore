@@ -5,6 +5,8 @@
 
 # Custom
 *.db
+*.sql
+*.vscode
 
 # User-specific files
 *.rsuser

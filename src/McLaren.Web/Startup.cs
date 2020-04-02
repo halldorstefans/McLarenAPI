@@ -34,7 +34,17 @@ namespace McLaren.Web
             services.AddControllers().AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandling = ReferenceHandling.Preserve);
 
-            services.AddDbContext<McLarenContext>(options => options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection")));
+            
+            if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
+            {
+                services.AddDbContext<McLarenContext>(options =>
+                        options.UseSqlServer(Configuration.GetConnectionString("AzureSQLConnection")));
+            }
+            else
+            {
+                services.AddDbContext<McLarenContext>(options =>
+                    options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection")));
+            }
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
@@ -60,6 +70,14 @@ namespace McLaren.Web
 
                     options.Conventions.Add(new VersionByNamespaceConvention());
                 });
+
+            services.AddVersionedApiExplorer(
+                options =>
+                {                    
+                    options.GroupNameFormat = "'v'VVV";
+
+                    options.SubstituteApiVersionInUrl = true;
+                } );
 
             services.AddSwaggerGen(c =>
             {

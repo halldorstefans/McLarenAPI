@@ -29,12 +29,12 @@ namespace McLaren.Core.Services
 
                 var car = await _carRepository.Get(id);
 
-                if (car.id > 0)
+                if (car.id == 0)
                 {
-                    return car.Map();
+                    return null;
                 }
 
-                return null;
+                return car.Map();
             }
             catch (Exception ex)
             {
@@ -51,12 +51,12 @@ namespace McLaren.Core.Services
 
                 var car = await _carRepository.Find(c => c.name == name);
 
-                if (car.Count() > 0)
+                if (car.Count() == 0)
                 {
-                    return car.First().Map();
+                    return null;
                 }
 
-                return null;
+                return car.First().Map();
             }
             catch (Exception ex)
             {
@@ -73,12 +73,12 @@ namespace McLaren.Core.Services
 
                 var car = await _carRepository.GetByYear(year);                
 
-                if (car.Count() > 0)
+                if (car.Count() == 0)
                 {
-                    return car.Select(c => c.Map());
+                    return Enumerable.Empty<CarDto>();
                 }
 
-                return null;
+                return car.Select(c => c.Map());
             }
             catch (Exception ex)
             {
@@ -95,12 +95,12 @@ namespace McLaren.Core.Services
 
                 var cars = await _carRepository.GetAll();
 
-                if (cars.Count() > 0)
+                if (cars.Count() == 0)
                 {                
-                    return cars.Select(c => c.Map());
+                    return Enumerable.Empty<CarDto>();
                 }
                 
-                return null;                            
+                return cars.Select(c => c.Map());                        
             }
             catch (Exception ex)
             {

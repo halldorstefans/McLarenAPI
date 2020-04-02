@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using McLaren.Core.Interfaces;
 using McLaren.Core.Models;
@@ -33,7 +34,7 @@ namespace McLaren.Web.V1.Controller
             {
                 var drivers = await _driverService.GetAll();
 
-                if (drivers == null)
+                if (drivers.Count() == 0)
                 {
                     return NotFound();
                 }
@@ -91,7 +92,7 @@ namespace McLaren.Web.V1.Controller
             {
                 var drivers = await _driverService.GetByLastName(lastname.ToLower());
 
-                if (drivers == null)
+                if (drivers.Count() == 0)
                 {
                     return NotFound();
                 }
