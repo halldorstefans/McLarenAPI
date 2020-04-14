@@ -8,7 +8,7 @@ using Moq;
 
 namespace McLaren.UnitTests.Mocks.Repositories
 {
-    public class MockCarRepository : Mock<ICarRepository>
+    public class MockCarRepository : Mock<ICarsRepository>
     {
         public MockCarRepository MockGetAll(Task<IEnumerable<Car>> car)
         {
@@ -16,6 +16,14 @@ namespace McLaren.UnitTests.Mocks.Repositories
 
             return this;
         }
+
+        public MockCarRepository MockGetById(Task<Car> car)
+        {
+            Setup(x => x.Get(It.IsAny<int>())).Returns(car);
+
+            return this;
+        }
+
         public MockCarRepository MockGetByYear(Task<IEnumerable<Car>> car)
         {
             Setup(x => x.GetByYear(It.IsAny<int>())).Returns(car);
@@ -25,7 +33,7 @@ namespace McLaren.UnitTests.Mocks.Repositories
 
         public MockCarRepository MockGetByName(Task<IEnumerable<Car>> car)
         {
-            Setup(x => x.Find(It.IsAny<Expression<Func<Car, bool>>>())).Returns(car);
+            Setup(x => x.GetByName(It.IsAny<string>())).Returns(car);
 
             return this;
         }
@@ -33,6 +41,13 @@ namespace McLaren.UnitTests.Mocks.Repositories
         public MockCarRepository VerifyGetAllForCar(Times times)
         {
             Verify(x => x.GetAll(), times);
+
+            return this;
+        }
+
+        public MockCarRepository VerifyGetByIdForCar(Times times)
+        {
+            Verify(x => x.Get(It.IsAny<int>()), times);
 
             return this;
         }
@@ -46,7 +61,7 @@ namespace McLaren.UnitTests.Mocks.Repositories
 
         public MockCarRepository VerifyGetByNameForCar(Times times)
         {
-            Verify(x => x.Find(It.IsAny<Expression<Func<Car, bool>>>()), times);
+            Verify(x => x.GetByName(It.IsAny<string>()), times);
 
             return this;
         }

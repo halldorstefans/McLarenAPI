@@ -8,37 +8,42 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using FluentAssertions;
+using McLaren.Core.ResourceParameters;
 
 namespace McLaren.UnitTests.Web.Controllers
 {
-    public class GrandPrixControllerTests
+    public class GrandPrixesControllerTests
     {
         [Fact]
-        public async void GrandPrixController_GetAll_Valid()
+        public async void GrandPrixesController_GetAll_Valid()
         {
-            var mockGrandPrix = MockGrandPrixData.GetListDTOAsync();
-
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetAllModelListAsync();
+            GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{};
             var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
+            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            
+            // Act
+            var result = await controller.Get(parameters);
 
-            var controller = new GrandPrixController(mockGrandPrixService.Object);
-
-            var result = await controller.Get();
-
+            // Assert
             Assert.IsAssignableFrom<IActionResult>(result);
             mockGrandPrixService.VerifyGetAll(Times.Once());
         }
 
         [Fact]
-        public async void GrandPrixController_GetAll_Empty()
+        public async void GrandPrixesController_GetAll_Empty()
         {
-            var mockGrandPrix = MockGrandPrixData.GetEmptyListDTOAsync();
-
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetEmptyModelListAsync();
+            GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{};
             var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
+            var controller = new GrandPrixesController(mockGrandPrixService.Object);
 
-            var controller = new GrandPrixController(mockGrandPrixService.Object);
+            // Act
+            var result = await controller.Get(parameters);
 
-            var result = await controller.Get();
-
+            // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
             var GrandPrix = okResult.Value.Should().BeAssignableTo<IEnumerable<GrandPrixDto>>().Subject;
             GrandPrix.Count().Should().Be(0);
@@ -46,37 +51,75 @@ namespace McLaren.UnitTests.Web.Controllers
         }
 
         [Fact]
-        public async void GrandPrixController_GetByYear_Valid()
+        public async void GrandPrixesController_GetAllFilter_Valid()
         {
-            var mockGrandPrixYear = 2020;
-            var mockGrandPrix = MockGrandPrixData.GetListDTOAsync();
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetAllModelListAsync();
+            GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{Country = "Spain", Year = "1970"};
+            var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
+            var controller = new GrandPrixesController(mockGrandPrixService.Object);
 
-            var mockGrandPrixService = new MockGrandPrixService().MockGetByYear(mockGrandPrix);
+            // Act
+            var result = await controller.Get(parameters);
 
-            var controller = new GrandPrixController(mockGrandPrixService.Object);
-
-            var result = await controller.Get(mockGrandPrixYear);
-
+            // Assert
             Assert.IsAssignableFrom<IActionResult>(result);
-            mockGrandPrixService.VerifyGetByYear(Times.Once());
+            mockGrandPrixService.VerifyGetAll(Times.Once());
         }
 
         [Fact]
-        public async void GrandPrixController_GetByYear_Empty()
+        public async void GrandPrixesController_GetAllFilter_Empty()
         {
-            var mockGrandPrixYear = 2020;
-            var mockGrandPrix = MockGrandPrixData.GetEmptyListDTOAsync();
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetEmptyModelListAsync();
+            GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{Country = "USA", Year = "2010"};
+            var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
+            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            
+            // Act
+            var result = await controller.Get(parameters);
 
-            var mockGrandPrixService = new MockGrandPrixService().MockGetByYear(mockGrandPrix);
-
-            var controller = new GrandPrixController(mockGrandPrixService.Object);
-
-            var result = await controller.Get(mockGrandPrixYear);
-
+            // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
             var GrandPrix = okResult.Value.Should().BeAssignableTo<IEnumerable<GrandPrixDto>>().Subject;
             GrandPrix.Count().Should().Be(0);
-            mockGrandPrixService.VerifyGetByYear(Times.Once());
+            mockGrandPrixService.VerifyGetAll(Times.Once());
+        }
+
+        [Fact]
+        public async void GrandPrixesController_GetById_Valid()
+        {
+            // Arrange
+            var mockGrandPrixId = 15;
+            var mockGrandPrix = MockGrandPrixData.GetAllModelListAsync();
+            var mockGrandPrixService = new MockGrandPrixService().MockGetById(mockGrandPrix);
+            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+
+            // Act
+            var result = await controller.Get(mockGrandPrixId);
+
+            // Assert
+            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
+            var GrandPrix = okResult.Value.Should().BeAssignableTo<IEnumerable<GrandPrixDto>>().Subject;
+            GrandPrix.Count().Should().Be(1);
+            mockGrandPrixService.VerifyGetById(Times.Once());
+        }
+
+        [Fact]
+        public async void GrandPrixesController_GetById_Empty()
+        {
+            // Arrange
+            var mockGrandPrixId = 5;
+            var mockGrandPrix = MockGrandPrixData.GetNullModelListAsync();
+            var mockGrandPrixService = new MockGrandPrixService().MockGetById(mockGrandPrix);
+            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+
+            // Act
+            var result = await controller.Get(mockGrandPrixId);
+
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+            mockGrandPrixService.VerifyGetById(Times.Once());
         }
     }
 }

@@ -3,112 +3,118 @@ using McLaren.UnitTests.Mocks.Repositories;
 using McLaren.UnitTests.Mocks.Data;
 using Moq;
 using Xunit;
+using McLaren.Core.ResourceParameters;
 
 namespace McLaren.UnitTests.Core.Services
 {
-    public class CarServiceTests
+    public class CarsServiceTests
     {
         [Fact]
-        public async void CarService_GetAll_Valid()
+        public async void CarsService_GetAll_Valid()
         {
-            var mockCar = MockCarData.GetListAsync();
-                        
+            // Arrange
+            var mockCar = MockCarData.GetAllEntitiesListAsync();                        
             var mockCarRepo = new MockCarRepository().MockGetAll(mockCar);
-            var mockCarLoggerRepo = new MockLoggerRepository<CarService>();
+            var mockCarLoggerRepo = new MockLoggerRepository<CarsService>();
+            var mockCarsService = new CarsService(mockCarRepo.Object, mockCarLoggerRepo.Object);
 
-            var mockCarService = new CarService(mockCarRepo.Object, mockCarLoggerRepo.Object);
+            // Act
+            var cars = await mockCarsService.GetCars();        
 
-            var cars = await mockCarService.GetAll();        
-
+            // Assert
             Assert.NotEmpty(cars);
             mockCarRepo.VerifyGetAllForCar(Times.Once());
         }        
 
         [Fact]
-        public async void CarService_GetAll_NoCars()
+        public async void CarsService_GetAll_NoCars()
         {
-            var mockCar = MockCarData.GetEmptyListAsync();
-                        
+            // Arrange
+            var mockCar = MockCarData.GetEmptyEntityListAsync();                        
             var mockCarRepo = new MockCarRepository().MockGetAll(mockCar);
-            var mockCarLoggerRepo = new MockLoggerRepository<CarService>();
+            var mockCarLoggerRepo = new MockLoggerRepository<CarsService>();
+            var mockCarsService = new CarsService(mockCarRepo.Object, mockCarLoggerRepo.Object);
 
-            var mockCarService = new CarService(mockCarRepo.Object, mockCarLoggerRepo.Object);
+            // Act
+            var cars = await mockCarsService.GetCars();        
 
-            var cars = await mockCarService.GetAll();        
-
+            // Assert
             Assert.Empty(cars);
             mockCarRepo.VerifyGetAllForCar(Times.Once());
         }
 
         [Fact]
-        public async void CarService_GetByYear_ValidYear()
+        public async void CarsService_GetAllFilter_Valid()
         {
-            var mockYear = 2020;
-            var mockCar = MockCarData.GetListAsync();
-                        
-            var mockCarRepo = new MockCarRepository().MockGetByYear(mockCar);
-            var mockCarLoggerRepo = new MockLoggerRepository<CarService>();
+            // Arrange
+            var mockCar = MockCarData.GetAllEntitiesListAsync();
+            CarsResourceParameters parameters = new CarsResourceParameters{Name = "MCL35", Year = "2020"};                        
+            var mockCarFilterRepo = new MockCarRepository().MockGetByYear(mockCar);
+            var mockCarLoggerRepo = new MockLoggerRepository<CarsService>();
+            var mockCarsService = new CarsService(mockCarFilterRepo.Object, mockCarLoggerRepo.Object);
 
-            var mockCarService = new CarService(mockCarRepo.Object, mockCarLoggerRepo.Object);
+            // Act
+            var cars = await mockCarsService.GetCars(parameters);        
 
-            var cars = await mockCarService.GetByYear(mockYear);        
-
+            // Assert
             Assert.NotEmpty(cars);
-            mockCarRepo.VerifyGetByYearForCar(Times.Once());
+            mockCarFilterRepo.VerifyGetByNameForCar(Times.Once());
+            mockCarFilterRepo.VerifyGetByYearForCar(Times.Once());
         }        
 
         [Fact]
-        public async void CarService_GetByYear_NoCars()
+        public async void CarsService_GetAllFilter_NoCars()
         {
-            var mockYear = 1980;
-            var mockCar = MockCarData.GetListAsync();
-                        
-            var mockCarRepo = new MockCarRepository().MockGetByYear(mockCar);
-            var mockCarLoggerRepo = new MockLoggerRepository<CarService>();
+            // Arrange
+            var mockCar = MockCarData.GetEmptyEntityListAsync();
+            CarsResourceParameters parameters = new CarsResourceParameters{Name = "M2B", Year = "1966"};                        
+            var mockCarFilterRepo = new MockCarRepository().MockGetByYear(mockCar);
+            var mockCarLoggerRepo = new MockLoggerRepository<CarsService>();
+            var mockCarsService = new CarsService(mockCarFilterRepo.Object, mockCarLoggerRepo.Object);
 
-            var mockCarService = new CarService(mockCarRepo.Object, mockCarLoggerRepo.Object);
+            // Act
+            var cars = await mockCarsService.GetCars(parameters);        
 
-            var cars = await mockCarService.GetByYear(mockYear);        
-
-            foreach (var car in cars)
-            {
-                Assert.NotEqual(mockYear, car.fromYear);
-            }            
-            mockCarRepo.VerifyGetByYearForCar(Times.Once());
-        }    
+            // Assert
+            Assert.Empty(cars);
+            mockCarFilterRepo.VerifyGetByNameForCar(Times.Once());
+            mockCarFilterRepo.VerifyGetByYearForCar(Times.Once());
+        }
 
         [Fact]
-        public async void CarService_GetByName_ValidName()
+        public async void CarsService_GetById_ValidId()
         {
-            var mockCarName = "MCL35";
-            var mockCar = MockCarData.GetListAsync();
-                        
-            var mockCarRepo = new MockCarRepository().MockGetByName(mockCar);
-            var mockCarLoggerRepo = new MockLoggerRepository<CarService>();
+            // Arrange
+            var mockId = 2;
+            var mockCar = MockCarData.GetSingleEntityAsync();                        
+            var mockCarRepo = new MockCarRepository().MockGetById(mockCar);
+            var mockCarLoggerRepo = new MockLoggerRepository<CarsService>();
+            var mockCarsService = new CarsService(mockCarRepo.Object, mockCarLoggerRepo.Object);
 
-            var mockCarService = new CarService(mockCarRepo.Object, mockCarLoggerRepo.Object);
+            // Act
+            var cars = await mockCarsService.GetCar(mockId);        
 
-            var cars = await mockCarService.GetByName(mockCarName);        
-
-            Assert.Equal(mockCarName, cars.name);
-            mockCarRepo.VerifyGetByNameForCar(Times.Once());
+            // Assert
+            Assert.Equal(mockId, cars.id);
+            mockCarRepo.VerifyGetByIdForCar(Times.Once());
         }        
 
         [Fact]
-        public async void CarService_GetByName_NoCars()
+        public async void CarsService_GetById_NoCars()
         {
-            var mockCarName = "M7C";
-            var mockCar = MockCarData.GetListAsync();
-                        
-            var mockCarRepo = new MockCarRepository().MockGetByName(mockCar);
-            var mockCarLoggerRepo = new MockLoggerRepository<CarService>();
+            // Arrange
+            var mockId = 5;
+            var mockCar = MockCarData.GetSingleEmptyEntityAsync();                        
+            var mockCarRepo = new MockCarRepository().MockGetById(mockCar);
+            var mockCarLoggerRepo = new MockLoggerRepository<CarsService>();
+            var mockCarsService = new CarsService(mockCarRepo.Object, mockCarLoggerRepo.Object);
+            
+            // Act
+            var cars = await mockCarsService.GetCar(mockId);        
 
-            var mockCarService = new CarService(mockCarRepo.Object, mockCarLoggerRepo.Object);
-
-            var cars = await mockCarService.GetByName(mockCarName);        
-
-            Assert.NotEqual(mockCarName, cars.name);
-            mockCarRepo.VerifyGetByNameForCar(Times.Once());
+            // Assert
+            Assert.Null(cars);
+            mockCarRepo.VerifyGetByIdForCar(Times.Once());
         }    
     }
 }

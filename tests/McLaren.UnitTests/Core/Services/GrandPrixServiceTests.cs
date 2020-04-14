@@ -3,125 +3,132 @@ using McLaren.UnitTests.Mocks.Repositories;
 using McLaren.UnitTests.Mocks.Data;
 using Moq;
 using Xunit;
+using McLaren.Core.ResourceParameters;
+using System;
 
 namespace McLaren.UnitTests.Core.Services
 {
-    public class GrandPrixServiceTests
+    public class GrandsPrixServiceTests
     {
         [Fact]
-        public async void GrandPrixService_GetAll_Valid()
+        public async void GrandsPrixService_GetAll_Valid()
         {
-            var mockGrandPrix = MockGrandPrixData.GetListAsync();
-                        
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetAllEntitiesListAsync();                        
             var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetAll(mockGrandPrix);
             var mockDriverRepo = new MockDriverRepository();
             var mockCarRepo = new MockCarRepository();
-            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixService>();
+            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixesService>();
+            var mockGrandsPrixService = new GrandPrixesService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
 
-            var mockGrandPrixService = new GrandPrixService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
+            // Act
+            var GrandPrixs = await mockGrandsPrixService.GetGrandPrixes();
 
-            var GrandPrixs = await mockGrandPrixService.GetAll();        
-
+            // Assert
             Assert.NotEmpty(GrandPrixs);
             mockGrandPrixRepo.VerifyGetAllForGrandPrix(Times.Once());
         }        
 
         [Fact]
-        public async void GrandPrixService_GetAll_NoGrandPrixs()
+        public async void GrandsPrixService_GetAll_NoGrandPrixs()
         {
-            var mockGrandPrix = MockGrandPrixData.GetEmptyListAsync();
-                        
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetEmptyEntityListAsync();                        
             var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetAll(mockGrandPrix);
             var mockDriverRepo = new MockDriverRepository();
             var mockCarRepo = new MockCarRepository();
-            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixService>();
+            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixesService>();
+            var mockGrandsPrixService = new GrandPrixesService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
 
-            var mockGrandPrixService = new GrandPrixService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
+            // Act
+            var GrandPrixs = await mockGrandsPrixService.GetGrandPrixes();        
 
-            var GrandPrixs = await mockGrandPrixService.GetAll();        
-
-            Assert.Empty(GrandPrixs);
+            // Assert
+            Assert.Null(GrandPrixs);
             mockGrandPrixRepo.VerifyGetAllForGrandPrix(Times.Once());
         }
 
         [Fact]
-        public async void GrandPrixService_GetById_ValidId()
+        public async void GrandsPrixService_GetAllFilter_Valid()
         {
-            var mockId = 2;
-            var mockGrandPrix = MockGrandPrixData.GetSingleAsync();
-                        
-            var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetById(mockGrandPrix);
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetAllEntitiesListAsync();
+            GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{Country = "Spain"};                        
+            var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetByCountry(mockGrandPrix);
             var mockDriverRepo = new MockDriverRepository();
             var mockCarRepo = new MockCarRepository();
-            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixService>();
+            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixesService>();
+            var mockGrandsPrixService = new GrandPrixesService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
 
-            var mockGrandPrixService = new GrandPrixService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
+            // Act
+            var GrandPrixes = await mockGrandsPrixService.GetGrandPrixes(parameters);       
 
-            var GrandPrix = await mockGrandPrixService.GetById(mockId);        
-
-            Assert.Equal(mockId, GrandPrix.id);
-            mockGrandPrixRepo.VerifyGetByIdForGrandPrix(Times.Once());
+            // Assert
+            Assert.NotEmpty(GrandPrixes);
+            mockGrandPrixRepo.VerifyGetByCountryForGrandPrix(Times.Once());
         }        
 
         [Fact]
-        public async void GrandPrixService_GetById_NoGrandPrixs()
+        public async void GrandsPrixService_GetAllFilter_NoGrandPrixs()
         {
-            var mockId = 1;
-            var mockGrandPrix = MockGrandPrixData.GetSingleAsync();
-                        
+            // Arrange
+            var mockGrandPrix = MockGrandPrixData.GetEmptyEntityListAsync();
+            GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{Country = "USA"};                        
+            var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetByCountry(mockGrandPrix);
+            var mockDriverRepo = new MockDriverRepository();
+            var mockCarRepo = new MockCarRepository();
+            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixesService>();
+            var mockGrandsPrixService = new GrandPrixesService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
+
+            // Act
+            var GrandPrixs = await mockGrandsPrixService.GetGrandPrixes(parameters);        
+
+            // Assert
+            Assert.Empty(GrandPrixs);
+            mockGrandPrixRepo.VerifyGetByCountryForGrandPrix(Times.Once());
+        }
+
+        [Fact]
+        public async void GrandsPrixService_GetById_ValidId()
+        {
+            // Arrange
+            var mockId = 15;
+            var mockGrandPrix = MockGrandPrixData.GetAllEntitiesListAsync();                        
             var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetById(mockGrandPrix);
             var mockDriverRepo = new MockDriverRepository();
             var mockCarRepo = new MockCarRepository();
-            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixService>();
+            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixesService>();
+            var mockGrandsPrixService = new GrandPrixesService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
+            
+            // Act
+            var GrandPrix = await mockGrandsPrixService.GetGrandPrix(mockId);        
 
-            var mockGrandPrixService = new GrandPrixService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
-
-            var GrandPrix = await mockGrandPrixService.GetById(mockId);        
-
-            Assert.NotEqual(mockId, GrandPrix.id);
-                       
-            mockGrandPrixRepo.VerifyGetByIdForGrandPrix(Times.Once());
-        }    
-
-        [Fact]
-        public async void GrandPrixService_GetByYear_ValidYear()
-        {
-            var mockGrandPrixYear = 1970;
-            var mockGrandPrix = MockGrandPrixData.GetListAsync();
-                        
-            var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetByYear(mockGrandPrix);
-            var mockDriverRepo = new MockDriverRepository();
-            var mockCarRepo = new MockCarRepository();
-            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixService>();
-
-            var mockGrandPrixService = new GrandPrixService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
-
-            var GrandPrixs = await mockGrandPrixService.GetByYear(mockGrandPrixYear);        
-
-            Assert.NotEmpty(GrandPrixs);
-            mockGrandPrixRepo.VerifyGetByYearForGrandPrix(Times.Exactly(2));
-        }        
-
-        [Fact]
-        public async void GrandPrixService_GetByYear_NoGrandPrixs()
-        {
-            var mockGrandPrixYear = 2000;
-            var mockGrandPrix = MockGrandPrixData.GetListAsync();
-                        
-            var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetByYear(mockGrandPrix);
-            var mockDriverRepo = new MockDriverRepository();
-            var mockCarRepo = new MockCarRepository();
-            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixService>();
-
-            var mockGrandPrixService = new GrandPrixService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
-
-            var GrandPrixs = await mockGrandPrixService.GetByYear(mockGrandPrixYear);        
-
-            foreach (var GrandPrix in GrandPrixs)
+            // assert
+            foreach (var race in GrandPrix)
             {
-                Assert.NotEqual(mockGrandPrixYear, GrandPrix.year);
-            } 
-            mockGrandPrixRepo.VerifyGetByYearForGrandPrix(Times.Exactly(2));
-        }    
+                Assert.Equal(mockId, race.raceid);
+            }            
+            mockGrandPrixRepo.VerifyGetByIdForGrandPrix(Times.Once());
+        }        
+
+        [Fact]
+        public async void GrandsPrixService_GetById_NoGrandPrixs()
+        {
+            // Arrange
+            var mockId = 2;
+            var mockGrandPrix = MockGrandPrixData.GetEmptyEntityListAsync();                        
+            var mockGrandPrixRepo = new MockGrandPrixRepository().MockGetById(mockGrandPrix);
+            var mockDriverRepo = new MockDriverRepository();
+            var mockCarRepo = new MockCarRepository();
+            var mockGrandPrixLoggerRepo = new MockLoggerRepository<GrandPrixesService>();
+            var mockGrandsPrixService = new GrandPrixesService(mockGrandPrixRepo.Object, mockDriverRepo.Object, mockCarRepo.Object, mockGrandPrixLoggerRepo.Object);
+
+            // Act
+            var GrandPrix = await mockGrandsPrixService.GetGrandPrix(mockId);        
+
+            // Assert
+            Assert.Null(GrandPrix);
+            mockGrandPrixRepo.VerifyGetByIdForGrandPrix(Times.Once());
+        }     
     }
 }

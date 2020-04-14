@@ -16,19 +16,23 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_AllDrivers()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/Driver");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/Drivers");
 
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var Drivers = JsonConvert.DeserializeObject<IEnumerable<DriverDto>>(await response.Content.ReadAsStringAsync());
             Drivers.Should().HaveCount(7);
         }
 
         [Fact]
-        public async void Get_Should_Return_OneDriverFromLastName()
+        public async void Get_Should_Return_OneDriverFromName()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/Driver/van_rooyen");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/Drivers?name=van rooyen");
 
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var Drivers = JsonConvert.DeserializeObject<IEnumerable<DriverDto>>(await response.Content.ReadAsStringAsync());
             foreach (var driver in Drivers)
             {
@@ -37,18 +41,25 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_NotFoundFromLastName()
+        public async void Get_Should_Return_EmptyFromName()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/Driver/hamilton");
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/Drivers?name=hamilton");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var Drivers = JsonConvert.DeserializeObject<IEnumerable<DriverDto>>(await response.Content.ReadAsStringAsync());
+            Drivers.Should().HaveCount(0);
         }
 
         [Fact]
         public async void Get_Should_Return_DriversFromId()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/Driver/1");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/Drivers/1");
 
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var driver = JsonConvert.DeserializeObject<DriverDto>(await response.Content.ReadAsStringAsync());
             Assert.Equal("Bruce", driver.firstName);
         }
@@ -56,7 +67,10 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_NotFoundFromId()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/Driver/100");
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/Drivers/100");
+
+            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
         }
     }

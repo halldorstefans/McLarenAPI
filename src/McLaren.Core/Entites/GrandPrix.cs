@@ -1,3 +1,4 @@
+using McLaren.Core.Interfaces.Repositories;
 using McLaren.Core.Models;
 
 namespace McLaren.Core.Entities
@@ -21,25 +22,27 @@ namespace McLaren.Core.Entities
         public GrandPrixDto Map() =>
             new GrandPrixDto
             {
-                id = id,
                 raceid = raceid,
                 year = year,
                 country = country
             };
 
-        public GrandPrixDriverDto MapDriver() =>
-            new GrandPrixDriverDto
+        public GrandPrixDriverDto MapDriver(ICarsRepository carsRepository, IDriversRepository driversRepository)
+        {
+
+            DriverDto driver = driversRepository.Get(driverId).Result.Map();
+            return new GrandPrixDriverDto
             {
-                raceid = raceid,
                 team = team,
                 carNumber = carNumber,                
-                driverid = driverId,
-                carid = carId,
+                driver = driver.firstName + " " + driver.lastName,
+                car = carsRepository.Get(carId).Result.name,
                 engine = engine,
                 tyre = tyre,
                 grid = grid,
                 position = position,
                 comment = comment
             };
+        }
     }
 }

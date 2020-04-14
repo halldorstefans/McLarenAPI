@@ -4,7 +4,6 @@ namespace McLaren.Core.Models
 {
     public class GrandPrixDto
     {
-        public int id { get; set; }
         public int raceid { get; set; }
         public int year { get; set; }
         public string country { get; set; }

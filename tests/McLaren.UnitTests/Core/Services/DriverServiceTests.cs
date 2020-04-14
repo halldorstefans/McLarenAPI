@@ -3,113 +3,116 @@ using McLaren.UnitTests.Mocks.Repositories;
 using McLaren.UnitTests.Mocks.Data;
 using Moq;
 using Xunit;
+using McLaren.Core.ResourceParameters;
 
 namespace McLaren.UnitTests.Core.Services
 {
-    public class DriverServiceTests
+    public class DriversServiceTests
     {
         [Fact]
-        public async void DriverService_GetAll_Valid()
+        public async void DriversService_GetAll_Valid()
         {
-            var mockDriver = MockDriverData.GetListAsync();
-                        
+            // Arrange
+            var mockDriver = MockDriverData.GetAllEntitiesListAsync();                        
             var mockDriverRepo = new MockDriverRepository().MockGetAll(mockDriver);
-            var mockDriverLoggerRepo = new MockLoggerRepository<DriverService>();
+            var mockDriverLoggerRepo = new MockLoggerRepository<DriversService>();
+            var mockDriversService = new DriversService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
 
-            var mockDriverService = new DriverService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
+            // Act
+            var drivers = await mockDriversService.GetDrivers();        
 
-            var drivers = await mockDriverService.GetAll();        
-
+            // Assert
             Assert.NotEmpty(drivers);
             mockDriverRepo.VerifyGetAllForDriver(Times.Once());
         }        
 
         [Fact]
-        public async void DriverService_GetAll_NoDrivers()
+        public async void DriversService_GetAll_NoDrivers()
         {
-            var mockDriver = MockDriverData.GetEmptyListAsync();
-                        
+            // Arrange
+            var mockDriver = MockDriverData.GetEmptyEntityListAsync();                        
             var mockDriverRepo = new MockDriverRepository().MockGetAll(mockDriver);
-            var mockDriverLoggerRepo = new MockLoggerRepository<DriverService>();
+            var mockDriverLoggerRepo = new MockLoggerRepository<DriversService>();
+            var mockDriversService = new DriversService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
 
-            var mockDriverService = new DriverService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
+            // Act
+            var drivers = await mockDriversService.GetDrivers();        
 
-            var drivers = await mockDriverService.GetAll();        
-
+            // Assert
             Assert.Empty(drivers);
             mockDriverRepo.VerifyGetAllForDriver(Times.Once());
         }
 
         [Fact]
-        public async void DriverService_GetById_ValidId()
+        public async void DriversService_GetAllFilter_Valid()
         {
-            var mockId = 2;
-            var mockDriver = MockDriverData.GetSingleAsync();
-                        
-            var mockDriverRepo = new MockDriverRepository().MockGetById(mockDriver);
-            var mockDriverLoggerRepo = new MockLoggerRepository<DriverService>();
-
-            var mockDriverService = new DriverService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
-
-            var driver = await mockDriverService.GetById(mockId);        
-
-            Assert.Equal(mockId, driver.id);
-            mockDriverRepo.VerifyGetByIdForDriver(Times.Once());
-        }        
-
-        [Fact]
-        public async void DriverService_GetById_NoDrivers()
-        {
-            var mockId = 1;
-            var mockDriver = MockDriverData.GetSingleAsync();
-                        
-            var mockDriverRepo = new MockDriverRepository().MockGetById(mockDriver);
-            var mockDriverLoggerRepo = new MockLoggerRepository<DriverService>();
-
-            var mockDriverService = new DriverService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
-
-            var driver = await mockDriverService.GetById(mockId);        
-
-            Assert.NotEqual(mockId, driver.id);
-                       
-            mockDriverRepo.VerifyGetByIdForDriver(Times.Once());
-        }    
-
-        [Fact]
-        public async void DriverService_GetByName_ValidName()
-        {
-            var mockDriverName = "Lauda";
-            var mockDriver = MockDriverData.GetListAsync();
-                        
+            // Arrange
+            var mockDriver = MockDriverData.GetAllEntitiesListAsync();
+            DriversResourceParameters parameters = new DriversResourceParameters{Name = "Niki"};                        
             var mockDriverRepo = new MockDriverRepository().MockGetByName(mockDriver);
-            var mockDriverLoggerRepo = new MockLoggerRepository<DriverService>();
+            var mockDriverLoggerRepo = new MockLoggerRepository<DriversService>();
+            var mockDriversService = new DriversService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
 
-            var mockDriverService = new DriverService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
+            // Act
+            var drivers = await mockDriversService.GetDrivers(parameters);        
 
-            var drivers = await mockDriverService.GetByLastName(mockDriverName);        
-
+            // Assert
             Assert.NotEmpty(drivers);
             mockDriverRepo.VerifyGetByNameForDriver(Times.Once());
         }        
 
         [Fact]
-        public async void DriverService_GetByName_NoDrivers()
+        public async void DriversService_GetAllFilter_NoDrivers()
         {
-            var mockDriverName = "Hamilton";
-            var mockDriver = MockDriverData.GetListAsync();
-                        
+            // Arrange
+            var mockDriver = MockDriverData.GetEmptyEntityListAsync();
+            DriversResourceParameters parameters = new DriversResourceParameters{Name = "Vettel"};                        
             var mockDriverRepo = new MockDriverRepository().MockGetByName(mockDriver);
-            var mockDriverLoggerRepo = new MockLoggerRepository<DriverService>();
+            var mockDriverLoggerRepo = new MockLoggerRepository<DriversService>();
+            var mockDriversService = new DriversService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
 
-            var mockDriverService = new DriverService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
+            // Act
+            var drivers = await mockDriversService.GetDrivers(parameters);        
 
-            var drivers = await mockDriverService.GetByLastName(mockDriverName);        
-
-            foreach (var driver in drivers)
-            {
-                Assert.NotEqual(mockDriverName, driver.lastName);
-            } 
+            //Assert
+            Assert.Empty(drivers);
             mockDriverRepo.VerifyGetByNameForDriver(Times.Once());
-        }    
+        }
+
+        [Fact]
+        public async void DriversService_GetById_ValidId()
+        {
+            // Arrange
+            var mockId = 13;
+            var mockDriver = MockDriverData.GetSingleEntityAsync();                        
+            var mockDriverRepo = new MockDriverRepository().MockGetById(mockDriver);
+            var mockDriverLoggerRepo = new MockLoggerRepository<DriversService>();
+            var mockDriversService = new DriversService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
+
+            // Act
+            var driver = await mockDriversService.GetDriver(mockId);        
+
+            // Assert
+            Assert.Equal(mockId, driver.id);
+            mockDriverRepo.VerifyGetByIdForDriver(Times.Once());
+        }        
+
+        [Fact]
+        public async void DriversService_GetById_NoDrivers()
+        {
+            // Arrange
+            var mockId = 1;
+            var mockDriver = MockDriverData.GetSingleEmptyEntityAsync();                        
+            var mockDriverRepo = new MockDriverRepository().MockGetById(mockDriver);
+            var mockDriverLoggerRepo = new MockLoggerRepository<DriversService>();
+            var mockDriversService = new DriversService(mockDriverRepo.Object, mockDriverLoggerRepo.Object);
+
+            // Act
+            var driver = await mockDriversService.GetDriver(mockId);        
+
+            // Assert
+            Assert.Null(driver); 
+            mockDriverRepo.VerifyGetByIdForDriver(Times.Once());
+        }        
     }
 }

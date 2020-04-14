@@ -7,19 +7,20 @@ using McLaren.Core.Interfaces;
 using McLaren.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using McLaren.Core.ResourceParameters;
 
 namespace McLaren.Web.V1.Controller
 {
     [Produces("application/json")]
     [ApiController]
     [Route("api/formula1/v{version:apiVersion}/[controller]")]
-    public class GrandPrixController :  ControllerBase
+    public class GrandPrixesController :  ControllerBase
     {
-        private readonly IGrandPrixService _grandPrixService;
+        private readonly IGrandPrixesService _grandPrixesService;
 
-        public GrandPrixController(IGrandPrixService grandPrixService)
+        public GrandPrixesController(IGrandPrixesService grandPrixesService)
         {
-            _grandPrixService = grandPrixService;
+            _grandPrixesService = grandPrixesService;
         }
 
         /// <summary>
@@ -29,18 +30,13 @@ namespace McLaren.Web.V1.Controller
         /// <response code="200">Returns the list of all Grands Prix</response>
         [HttpGet]
         [ProducesResponseType(typeof(List<GrandPrixDto>), StatusCodes.Status200OK)]
-        public async Task<IActionResult> Get()
+        public async Task<IActionResult> Get([FromQuery] GrandPrixesResourceParameters grandPrixesResourceParameters)
         {
             try
             {
-                var grandsPrix = await _grandPrixService.GetAll();
+                var grandPrixes = await _grandPrixesService.GetGrandPrixes(grandPrixesResourceParameters);
 
-                if (grandsPrix.Count() == 0)
-                {
-                    return NotFound();
-                }
-
-                return Ok(grandsPrix);
+                return Ok(grandPrixes);
             }
             catch (Exception ex)
             {
@@ -49,27 +45,27 @@ namespace McLaren.Web.V1.Controller
         }
 
         /// <summary>
-        /// Lists all Grands Prix in specified year
+        /// Grand Prix with specified raceId
         /// </summary>
-        /// <param name="year"></param>
-        /// <returns>A list of all Grands Prix in specified year</returns>
-        /// <response code="200">Returns the list of all Grands Prix in specified year</response>
-        /// <response code="404">If no Grands Prix were found in the specified year</response>
-        [HttpGet("{year:int}")]
+        /// <param name="raceId"></param>
+        /// <returns>A Grand Prix with specified raceId</returns>
+        /// <response code="200">Returns the Grand Prix with specified raceId</response>
+        /// <response code="404">If no Grand Prix was found with the specified raceId</response>
+        [HttpGet("{raceId:int}")]
         [ProducesResponseType(typeof(List<GrandPrixDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]        
-        public async Task<IActionResult> Get(int year)
+        public async Task<IActionResult> Get(int raceId)
         {
             try
             {
-                var grandsPrix = await _grandPrixService.GetByYear(year);
+                var grandPrix = await _grandPrixesService.GetGrandPrix(raceId);
 
-                if (grandsPrix.Count() == 0)
+                if (grandPrix == null)
                 {
                     return NotFound();
                 }
 
-                return Ok(grandsPrix);
+                return Ok(grandPrix);
             }
             catch (Exception ex)
             {                

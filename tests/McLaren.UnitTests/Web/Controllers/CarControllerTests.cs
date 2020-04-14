@@ -8,37 +8,42 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Xunit;
 using FluentAssertions;
+using McLaren.Core.ResourceParameters;
 
 namespace McLaren.UnitTests.Web.Controllers
 {
-    public class CarControllerTests
+    public class CarsControllerTests
     {
         [Fact]
-        public async void CarController_GetAll_Valid()
+        public async void CarsController_GetAll_Valid()
         {
-            var mockCar = MockCarData.GetListDTOAsync();
-
+            // Arrange
+            var mockCar = MockCarData.GetAllModelListAsync();
+            CarsResourceParameters parameters = new CarsResourceParameters{};
             var mockCarService = new MockCarService().MockGetAll(mockCar);
+            var controller = new CarsController(mockCarService.Object);
 
-            var controller = new CarController(mockCarService.Object);
+            // Act
+            var result = await controller.Get(parameters);
 
-            var result = await controller.Get();
-
+            // Assert
             Assert.IsAssignableFrom<IActionResult>(result);
             mockCarService.VerifyGetAll(Times.Once());
         }
 
         [Fact]
-        public async void CarController_GetAll_Empty()
+        public async void CarsController_GetAll_Empty()
         {
-            var mockCar = MockCarData.GetEmptyListDTOAsync();
-
+            // Arrange
+            var mockCar = MockCarData.GetEmptyModelListAsync();
+            CarsResourceParameters parameters = new CarsResourceParameters{};
             var mockCarService = new MockCarService().MockGetAll(mockCar);
+            var controller = new CarsController(mockCarService.Object);
 
-            var controller = new CarController(mockCarService.Object);
+            // Act
+            var result = await controller.Get(parameters);
 
-            var result = await controller.Get();
-
+            // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
             var car = okResult.Value.Should().BeAssignableTo<IEnumerable<CarDto>>().Subject;
             car.Count().Should().Be(0);
@@ -46,71 +51,74 @@ namespace McLaren.UnitTests.Web.Controllers
         }
 
         [Fact]
-        public async void CarController_GetByYear_Valid()
+        public async void CarsController_GetAllFilter_Valid()
         {
-            var mockCarYear = 2020;
-            var mockCar = MockCarData.GetListDTOAsync();
+            // Arrange
+            var mockCar = MockCarData.GetAllModelListAsync();
+            CarsResourceParameters parameters = new CarsResourceParameters{Name = "MCL35", Year = "2020"};
+            var mockCarService = new MockCarService().MockGetAll(mockCar);
+            var controller = new CarsController(mockCarService.Object);
 
-            var mockCarService = new MockCarService().MockGetByYear(mockCar);
+            // Act
+            var result = await controller.Get(parameters);
 
-            var controller = new CarController(mockCarService.Object);
-
-            var result = await controller.Get(mockCarYear);
-
+            // Assert
             Assert.IsAssignableFrom<IActionResult>(result);
-            mockCarService.VerifyGetByYear(Times.Once());
+            mockCarService.VerifyGetAll(Times.Once());
         }
 
         [Fact]
-        public async void CarController_GetByYear_Empty()
+        public async void CarsController_GetAllFilter_Empty()
         {
-            var mockCarYear = 2020;
-            var mockCar = MockCarData.GetEmptyListDTOAsync();
+            // Arrange
+            var mockCar = MockCarData.GetEmptyModelListAsync();
+            CarsResourceParameters parameters = new CarsResourceParameters{Name = "M2B", Year = "1966"};
+            var mockCarService = new MockCarService().MockGetAll(mockCar);
+            var controller = new CarsController(mockCarService.Object);
 
-            var mockCarService = new MockCarService().MockGetByYear(mockCar);
+            // Act
+            var result = await controller.Get(parameters);
 
-            var controller = new CarController(mockCarService.Object);
-
-            var result = await controller.Get(mockCarYear);
-
+            // Assert
             var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
             var car = okResult.Value.Should().BeAssignableTo<IEnumerable<CarDto>>().Subject;
             car.Count().Should().Be(0);
-            mockCarService.VerifyGetByYear(Times.Once());
+            mockCarService.VerifyGetAll(Times.Once());
         }
 
         [Fact]
-        public async void CarController_GetByName_Valid()
+        public async void CarsController_GetById_Valid()
         {
-            var mockCarName = "MCL35";
-            var mockCar = MockCarData.GetSingleDTOAsync();
+            // Arrange
+            var mockCarYear = 2020;
+            var mockCar = MockCarData.GetSingleModelAsync();
+            var mockCarService = new MockCarService().MockGetById(mockCar);
+            var controller = new CarsController(mockCarService.Object);
+            
+            // Act
+            var result = await controller.Get(mockCarYear);
 
-            var mockCarService = new MockCarService().MockGetByName(mockCar);
-
-            var controller = new CarController(mockCarService.Object);
-
-            var result = await controller.Get(mockCarName);
-
+            // Assert
             Assert.IsAssignableFrom<IActionResult>(result);
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            var car = okResult.Value.Should().BeAssignableTo<CarDto>().Subject;
-            car.Should().NotBeNull();
-            mockCarService.VerifyGetByName(Times.Once());
+            mockCarService.VerifyGetById(Times.Once());
         }
 
         [Fact]
-        public async void CarController_GetByName_Empty()
+        public async void CarsController_GetById_Empty()
         {
-            var mockCarName = "M7A";
-            var mockCar = MockCarData.GetEmptySingleDTOAsync();
+            // Arrange
+            var mockCarYear = 1980;
+            var mockCar = MockCarData.GetSingleEmptyModelAsync();
+            var mockCarService = new MockCarService().MockGetById(mockCar);
+            var controller = new CarsController(mockCarService.Object);
 
-            var mockCarService = new MockCarService().MockGetByName(mockCar);
+            // Act
+            var result = await controller.Get(mockCarYear);
 
-            var controller = new CarController(mockCarService.Object);
-
-            var result = await controller.Get(mockCarName);
-
-            var okResult = result.Should().BeOfType<NotFoundResult>().Subject;            
+            // Assert
+            result.Should().BeOfType<NotFoundResult>();
+            mockCarService.VerifyGetById(Times.Once());
         }
+
     }
 }

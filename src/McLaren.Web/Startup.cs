@@ -31,9 +31,13 @@ namespace McLaren.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers().AddJsonOptions(options =>
-                options.JsonSerializerOptions.ReferenceHandling = ReferenceHandling.Preserve);
-
+            services.AddControllers(setupAction =>
+            {
+                setupAction.ReturnHttpNotAcceptable = true;
+            })
+            .AddJsonOptions(options =>
+                options.JsonSerializerOptions.ReferenceHandling = ReferenceHandling.Preserve
+            );
             
             if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
             {
@@ -48,14 +52,14 @@ namespace McLaren.Web
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
-            services.AddScoped<IGrandPrixRepository, GrandPrixRepository>();
-            services.AddScoped<IGrandPrixService, GrandPrixService>();
+            services.AddScoped<IGrandPrixesRepository, GrandPrixesRepository>();
+            services.AddScoped<IGrandPrixesService, GrandPrixesService>();
 
-            services.AddScoped<ICarRepository, CarRepository>();
-            services.AddScoped<ICarService, CarService>();
+            services.AddScoped<ICarsRepository, CarsRepository>();
+            services.AddScoped<ICarsService, CarsService>();
 
-            services.AddScoped<IDriverRepository, DriverRepository>();
-            services.AddScoped<IDriverService, DriverService>();
+            services.AddScoped<IDriversRepository, DriversRepository>();
+            services.AddScoped<IDriversService, DriversService>();
 
             services.AddSingleton<ILogService>((container) =>
             {

@@ -21,9 +21,9 @@ namespace McLaren.IntegrationTests
 
             builder.ConfigureTestServices(services =>
             {
-                services.AddScoped<ICarService, CarService>();
-                services.AddScoped<IDriverService, DriverService>();
-                services.AddScoped<IGrandPrixService, GrandPrixService>();
+                services.AddScoped<ICarsService, CarsService>();
+                services.AddScoped<IDriversService, DriversService>();
+                services.AddScoped<IGrandPrixesService, GrandPrixesService>();
             });
         }
     }

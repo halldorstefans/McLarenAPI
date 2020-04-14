@@ -6,51 +6,37 @@ using McLaren.Core.Models;
 namespace McLaren.UnitTests.Mocks.Data
 {
     public class MockDriverData
-    {
-        public static async Task<DriverDto> GetEmptySingleDTOAsync()
+    {        
+        public static async Task<IEnumerable<DriverDto>> GetAllModelListAsync()
         {
-            return await Task.Run(() => GetEmptySingleDTO());
+            return await Task.Run(() => GetAllModelList());
+        }
+
+        public static async Task<IEnumerable<DriverDto>> GetEmptyModelListAsync()
+        {
+            return await Task.Run(() => GetEmptyModelList());
+        }
+
+        public static async Task<DriverDto> GetSingleModelAsync()
+        {
+            return await Task.Run(() => GetSingleModel());
+        }
+        
+        public static async Task<DriverDto> GetSingleEmptyModelAsync()
+        {
+            return await Task.Run(() => GetSingleEmptyModel());
         }
         private static DriverDto GetEmptySingleDTO()
         {            
             return null;            
         }
-        public static async Task<DriverDto> GetSingleDTOAsync()
-        {
-            return await Task.Run(() => GetSingleDTO());
-        }
-        private static DriverDto GetSingleDTO()
-        {            
-            return new DriverDto()
-            {
-                id = 2,
-                firstName = "Niki",
-                lastName = "Lauda",                
-                gpEntries = 100,
-                gpWins = 60,
-                gpPoles = 70,
-                gpFastestLap = 30,
-                gpPodiums = 50,
-                gpPoints = 500
-            };            
-        } 
-
-        public static async Task<IEnumerable<DriverDto>> GetListDTOAsync()
-        {
-            return await Task.Run(() => GetListDTO());
-        }
-
-        public static async Task<IEnumerable<DriverDto>> GetEmptyListDTOAsync()
-        {
-            return await Task.Run(() => GetEmptyListDTO());
-        }
-        private static IEnumerable<DriverDto> GetListDTO()
+        private static IEnumerable<DriverDto> GetAllModelList()
         {
             return new List<DriverDto>()
             {
                 new DriverDto()
                 {
-                    id = 2,
+                    id = 13,
                     firstName = "Niki",
                     lastName = "Lauda",                
                     gpEntries = 100,
@@ -62,22 +48,15 @@ namespace McLaren.UnitTests.Mocks.Data
                 }
             };
         } 
-        private static IEnumerable<DriverDto> GetEmptyListDTO()
+        private static IEnumerable<DriverDto> GetEmptyModelList()
         {
-            return new List<DriverDto>()
-            {
-            };
+            return new List<DriverDto>();
         } 
-
-        public static async Task<Driver> GetSingleAsync()
-        {
-            return await Task.Run(() => GetSingle());
-        }
-        private static Driver GetSingle()
+        private static DriverDto GetSingleModel()
         {            
-            return new Driver()
+            return new DriverDto()
             {
-                id = 2,
+                id = 13,
                 firstName = "Niki",
                 lastName = "Lauda",                
                 gpEntries = 100,
@@ -88,17 +67,38 @@ namespace McLaren.UnitTests.Mocks.Data
                 gpPoints = 500
             };            
         } 
-        public static async Task<IEnumerable<Driver>> GetListAsync()
+
+        private static DriverDto GetSingleEmptyModel()
+        {            
+            return null;
+        } 
+
+        public static async Task<IEnumerable<Driver>> GetAllEntitiesListAsync()
         {
-            return await Task.Run(() => GetList());
-        }        
-        private static IEnumerable<Driver> GetList()
+            return await Task.Run(() => GetAllEntitiesList());
+        }
+
+        public static async Task<IEnumerable<Driver>> GetEmptyEntityListAsync()
+        {
+            return await Task.Run(() => GetEmptyEntityList());
+        }
+
+        public static async Task<Driver> GetSingleEntityAsync()
+        {
+            return await Task.Run(() => GetSingleEntity());
+        }
+
+        public static async Task<Driver> GetSingleEmptyEntityAsync()
+        {
+            return await Task.Run(() => GetSingleEmptyEntity());
+        }
+        private static IEnumerable<Driver> GetAllEntitiesList()
         {
             return new List<Driver>()
             {
                 new Driver()
                 {
-                    id = 2,
+                    id = 13,
                     firstName = "Niki",
                     lastName = "Lauda",                
                     gpEntries = 100,
@@ -110,15 +110,29 @@ namespace McLaren.UnitTests.Mocks.Data
                 }
             };
         } 
-        public static async Task<IEnumerable<Driver>> GetEmptyListAsync()
+        private static IEnumerable<Driver> GetEmptyEntityList()
         {
-            return await Task.Run(() => GetEmptyList());
-        }
-        private static IEnumerable<Driver> GetEmptyList()
-        {
-            return new List<Driver>()
+            return new List<Driver>();
+        } 
+        private static Driver GetSingleEntity()
+        {            
+            return new Driver()
             {
-            };
+                id = 13,
+                firstName = "Niki",
+                lastName = "Lauda",                
+                gpEntries = 100,
+                gpWins = 60,
+                gpPoles = 70,
+                gpFastestLap = 30,
+                gpPodiums = 50,
+                gpPoints = 500
+            };            
+        }     
+        
+        private static Driver GetSingleEmptyEntity()
+        {            
+            return null;            
         } 
     }
 }

@@ -8,7 +8,7 @@ using Moq;
 
 namespace McLaren.UnitTests.Mocks.Repositories
 {
-    public class MockDriverRepository : Mock<IDriverRepository>
+    public class MockDriverRepository : Mock<IDriversRepository>
     {
         public MockDriverRepository MockGetAll(Task<IEnumerable<Driver>> drivers)
         {
@@ -23,9 +23,9 @@ namespace McLaren.UnitTests.Mocks.Repositories
             return this;
         }
 
-        public MockDriverRepository MockGetByName(Task<IEnumerable<Driver>> drivers)
+        public MockDriverRepository MockGetByName(Task<IEnumerable<Driver>> driver)
         {
-            Setup(x => x.Find(It.IsAny<Expression<Func<Driver, bool>>>())).Returns(drivers);
+            Setup(x => x.GetByName(It.IsAny<string>())).Returns(driver);
 
             return this;
         }
@@ -46,7 +46,7 @@ namespace McLaren.UnitTests.Mocks.Repositories
 
         public MockDriverRepository VerifyGetByNameForDriver(Times times)
         {
-            Verify(x => x.Find(It.IsAny<Expression<Func<Driver, bool>>>()), times);
+            Verify(x => x.GetByName(It.IsAny<string>()), times);
 
             return this;
         }

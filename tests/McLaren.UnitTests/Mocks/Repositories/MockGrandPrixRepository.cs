@@ -8,24 +8,31 @@ using Moq;
 
 namespace McLaren.UnitTests.Mocks.Repositories
 {
-    public class MockGrandPrixRepository : Mock<IGrandPrixRepository>
+    public class MockGrandPrixRepository : Mock<IGrandPrixesRepository>
     {
-        public MockGrandPrixRepository MockGetAll(Task<IEnumerable<GrandPrix>> GrandPrixs)
+        public MockGrandPrixRepository MockGetAll(Task<IEnumerable<GrandPrix>> GrandPrix)
         {
-            Setup(x => x.GetAll()).Returns(GrandPrixs);
+            Setup(x => x.GetAll()).Returns(GrandPrix);
 
             return this;
         }
-        public MockGrandPrixRepository MockGetById(Task<GrandPrix> GrandPrix)
+        public MockGrandPrixRepository MockGetById(Task<IEnumerable<GrandPrix>> GrandPrix)
         {
-            Setup(x => x.Get(It.IsAny<int>())).Returns(GrandPrix);
+            Setup(x => x.GetByRaceId(It.IsAny<int>())).Returns(GrandPrix);
 
             return this;
         }
 
         public MockGrandPrixRepository MockGetByYear(Task<IEnumerable<GrandPrix>> GrandPrix)
         {
-            Setup(x => x.Find(It.IsAny<Expression<Func<GrandPrix, bool>>>())).Returns(GrandPrix);
+            Setup(x => x.GetByYear(It.IsAny<int>())).Returns(GrandPrix);
+
+            return this;
+        }
+
+        public MockGrandPrixRepository MockGetByCountry(Task<IEnumerable<GrandPrix>> GrandPrix)
+        {
+            Setup(x => x.GetByCountry(It.IsAny<string>())).Returns(GrandPrix);
 
             return this;
         }
@@ -39,14 +46,21 @@ namespace McLaren.UnitTests.Mocks.Repositories
 
         public MockGrandPrixRepository VerifyGetByIdForGrandPrix(Times times)
         {
-            Verify(x => x.Get(It.IsAny<int>()), times);
+            Verify(x => x.GetByRaceId(It.IsAny<int>()), times);
 
             return this;
         }
 
         public MockGrandPrixRepository VerifyGetByYearForGrandPrix(Times times)
         {
-            Verify(x => x.Find(It.IsAny<Expression<Func<GrandPrix, bool>>>()), times);
+            Verify(x => x.GetByYear(It.IsAny<int>()), times);
+
+            return this;
+        }
+
+        public MockGrandPrixRepository VerifyGetByCountryForGrandPrix(Times times)
+        {
+            Verify(x => x.GetByCountry(It.IsAny<string>()), times);
 
             return this;
         }

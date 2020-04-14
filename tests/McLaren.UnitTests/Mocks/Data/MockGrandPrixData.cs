@@ -7,63 +7,146 @@ namespace McLaren.UnitTests.Mocks.Data
 {
     public class MockGrandPrixData
     {
-        public static async Task<GrandPrixDto> GetEmptySingleDTOAsync()
+        public static async Task<IEnumerable<GrandPrixDto>> GetAllModelListAsync()
         {
-            return await Task.Run(() => GetEmptySingleDTO());
+            return await Task.Run(() => GetAllModelList());
         }
+
+        public static async Task<IEnumerable<GrandPrixDto>> GetEmptyModelListAsync()
+        {
+            return await Task.Run(() => GetEmptyModelList());
+        }
+
+        public static async Task<IEnumerable<GrandPrixDto>> GetNullModelListAsync()
+        {
+            return await Task.Run(() => GetNullModelList());
+        }
+
+        public static async Task<GrandPrixDto> GetSingleModelAsync()
+        {
+            return await Task.Run(() => GetSingleModel());
+        }
+        
+        public static async Task<GrandPrixDto> GetSingleEmptyModelAsync()
+        {
+            return await Task.Run(() => GetSingleEmptyModel());
+        }
+        
         private static GrandPrixDto GetEmptySingleDTO()
         {            
             return null;            
         }
-        public static async Task<GrandPrixDto> GetSingleDTOAsync()
-        {
-            return await Task.Run(() => GetSingleDTO());
-        }
-        private static GrandPrixDto GetSingleDTO()
-        {            
-            return new GrandPrixDto()
-            {
-                id = 2,
-                raceid = 15,
-                year = 1970,
-                country = "Spain"
-            };            
-        } 
 
-        public static async Task<IEnumerable<GrandPrixDto>> GetListDTOAsync()
-        {
-            return await Task.Run(() => GetListDTO());
-        }
-
-        public static async Task<IEnumerable<GrandPrixDto>> GetEmptyListDTOAsync()
-        {
-            return await Task.Run(() => GetEmptyListDTO());
-        }
-        private static IEnumerable<GrandPrixDto> GetListDTO()
+        private static IEnumerable<GrandPrixDto> GetAllModelList()
         {
             return new List<GrandPrixDto>()
             {
                 new GrandPrixDto()
                 {
-                    id = 2,
                     raceid = 15,
                     year = 1970,
-                    country = "Spain"
+                    country = "Spain",
+                    drivers = new []
+                    {
+                        new GrandPrixDriverDto{
+                            team = "McLaren",
+                            carNumber = 5,                
+                            driver = "Niki Lauda",
+                            car = "M7B",
+                            engine = "Mercedes",
+                            tyre = "tyre",
+                            grid = "3",
+                            position = "1",
+                            comment = "comment"
+                        }
+                    }                
                 }
             };
         } 
-        private static IEnumerable<GrandPrixDto> GetEmptyListDTO()
+        private static IEnumerable<GrandPrixDto> GetEmptyModelList()
         {
-            return new List<GrandPrixDto>()
-            {
-            };
+            return new List<GrandPrixDto>();
         } 
 
-        public static async Task<GrandPrix> GetSingleAsync()
+        private static IEnumerable<GrandPrixDto> GetNullModelList()
         {
-            return await Task.Run(() => GetSingle());
+            return null;
+        } 
+        private static GrandPrixDto GetSingleModel()
+        {            
+            return new GrandPrixDto()
+            {
+                raceid = 15,
+                year = 1970,
+                country = "Spain",
+                drivers = new []
+                {
+                    new GrandPrixDriverDto{
+                        team = "McLaren",
+                        carNumber = 5,                
+                        driver = "Niki Lauda",
+                        car = "M7B",
+                        engine = "Mercedes",
+                        tyre = "tyre",
+                        grid = "3",
+                        position = "1",
+                        comment = "comment"
+                    }
+                }  
+            };            
+        } 
+
+        private static GrandPrixDto GetSingleEmptyModel()
+        {            
+            return null;            
+        } 
+
+        public static async Task<IEnumerable<GrandPrix>> GetAllEntitiesListAsync()
+        {
+            return await Task.Run(() => GetAllEntitiesList());
         }
-        private static GrandPrix GetSingle()
+
+        public static async Task<IEnumerable<GrandPrix>> GetEmptyEntityListAsync()
+        {
+            return await Task.Run(() => GetEmptyEntityList());
+        }
+
+        public static async Task<GrandPrix> GetSingleEntityAsync()
+        {
+            return await Task.Run(() => GetSingleEntity());
+        }
+
+        public static async Task<GrandPrix> GetSingleEmptyEntityAsync()
+        {
+            return await Task.Run(() => GetSingleEmptyEntity());
+        }
+        private static IEnumerable<GrandPrix> GetAllEntitiesList()
+        {
+            return new List<GrandPrix>()
+            {
+                new GrandPrix()
+                {
+                    id = 2,
+                    raceid = 15,
+                    year = 1970,
+                    country = "Spain",
+                    team = "McLaren",
+                    carNumber = 5,                
+                    driverId = 13,
+                    carId = 2,
+                    engine = "Mercedes",
+                    tyre = "tyre",
+                    grid = "3",
+                    position = "1",
+                    comment = "comment"
+                }
+            };
+        } 
+        private static IEnumerable<GrandPrix> GetEmptyEntityList()
+        {
+            return new List<GrandPrix>();
+        } 
+        private static GrandPrix GetSingleEntity()
         {            
             return new GrandPrix()
             {
@@ -81,42 +164,11 @@ namespace McLaren.UnitTests.Mocks.Data
                 position = "1",
                 comment = "comment"
             };            
-        } 
-        public static async Task<IEnumerable<GrandPrix>> GetListAsync()
-        {
-            return await Task.Run(() => GetList());
-        }        
-        private static IEnumerable<GrandPrix> GetList()
-        {
-            return new List<GrandPrix>()
-            {
-                new GrandPrix()
-                {
-                    id = 2,
-                    raceid = 15,
-                    year = 1970,
-                    country = "Spain",
-                    team = "McLaren",
-                    carNumber = 5,                
-                    driverId = 13,
-                    carId = 7,
-                    engine = "Mercedes",
-                    tyre = "tyre",
-                    grid = "3",
-                    position = "1",
-                    comment = "comment"
-                }
-            };
-        } 
-        public static async Task<IEnumerable<GrandPrix>> GetEmptyListAsync()
-        {
-            return await Task.Run(() => GetEmptyList());
-        }
-        private static IEnumerable<GrandPrix> GetEmptyList()
-        {
-            return new List<GrandPrix>()
-            {
-            };
+        }     
+
+        private static GrandPrix GetSingleEmptyEntity()
+        {            
+            return null;            
         } 
     }
 }

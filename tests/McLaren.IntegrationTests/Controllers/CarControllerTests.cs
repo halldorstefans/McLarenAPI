@@ -16,45 +16,73 @@ namespace McLaren.IntegrationTests
         [Fact]
         public async void Get_Should_Return_AllCars()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/car");
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/cars");
+            
+            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-
             var cars = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(await response.Content.ReadAsStringAsync());
             cars.Should().HaveCount(6);
         }
 
         [Fact]
-        public async void Get_Should_Return_OneCarFromName()
+        public async void Get_Should_Return_OneCarFromId()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/car/m7a");
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/cars/5");
+            
+            // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
-
             var cars = JsonConvert.DeserializeObject<CarDto>(await response.Content.ReadAsStringAsync());
-            Assert.Equal(4, cars.id);
+            Assert.Equal(5, cars.id);
         }
 
         [Fact]
-        public async void Get_Should_Return_NotFoundFromName()
+        public async void Get_Should_Return_OneCarFromName()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/car/m6a");
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/cars?name=m7a");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var cars = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(await response.Content.ReadAsStringAsync());
+            cars.Should().HaveCount(1);
+        }
+
+        [Fact]
+        public async void Get_Should_Return_EmptyFromName()
+        {
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/cars?name=m6a");
+
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            var cars = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(await response.Content.ReadAsStringAsync());
+            cars.Should().HaveCount(0);
         }
 
         [Fact]
         public async void Get_Should_Return_CarsFromYear()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/car/1968");
-            response.StatusCode.Should().Be(HttpStatusCode.OK);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/cars?year=1968");
 
+            // Assert
+            response.StatusCode.Should().Be(HttpStatusCode.OK);
             var cars = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(await response.Content.ReadAsStringAsync());
             cars.Should().HaveCount(3);
         }
 
         [Fact]
-        public async void Get_Should_Return_NotFoundFromYear()
+        public async void Get_Should_Return_EmptyFromYear()
         {
-            var response = await _client.GetAsync("/api/formula1/v1/car/1950");
-            response.StatusCode.Should().Be(HttpStatusCode.NotFound);
+            // Act
+            var response = await _client.GetAsync("/api/formula1/v1/cars?year=1950");
+            
+            // Assert            
+            response.StatusCode.Should().Be(HttpStatusCode.OK);            
+            var cars = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(await response.Content.ReadAsStringAsync());
+            cars.Should().HaveCount(0);
         }
     }
 }
