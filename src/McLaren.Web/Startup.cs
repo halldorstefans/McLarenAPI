@@ -85,7 +85,7 @@ namespace McLaren.Web
 
             services.AddSwaggerGen(c =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "McLaren API", Version = "v1" });
+                c.SwaggerDoc("v0.9", new OpenApiInfo { Title = "McLaren API", Version = "v0.9" });
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
@@ -103,7 +103,7 @@ namespace McLaren.Web
 
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/docs/v1/docs.json", "McLaren API V1");
+                c.SwaggerEndpoint("/docs/v0.9/docs.json", "McLaren API V0.9");
                 c.RoutePrefix = "docs";
             });
 

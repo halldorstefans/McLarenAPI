@@ -29,7 +29,9 @@
 <!-- ABOUT THE PROJECT -->
 ## McLaren API
 
-A description of the project
+This is a project I created in order to understand APIs, and the architecture behind them better.
+
+You can read my [blog post about it here](www.halldorstefans.com/building-my-first-api-from-scratch/)
 
 ### Built With
 

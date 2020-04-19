@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using McLaren.Core.ResourceParameters;
 
-namespace McLaren.Web.V1.Controller
+namespace McLaren.Web.V0_9.Controller
 {
     [Produces("application/json")]
     [ApiController]

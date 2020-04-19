@@ -8,7 +8,7 @@ using McLaren.Core.ResourceParameters;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
-namespace McLaren.Web.V1.Controller
+namespace McLaren.Web.V0_9.Controller
 {    
     [ApiController]
     [Produces("application/json")]
