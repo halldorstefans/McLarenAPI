@@ -12,7 +12,7 @@ namespace McLaren.Web.V0_9.Controller
 {
     [ApiController]
     [Produces("application/json")]
-    [Route("api/formula1/v{version:apiVersion}/[controller]")]
+    [Route("api/formula1/v{version:apiVersion}/[controller]")]    
     public class CarsController :  ControllerBase
     {
         private readonly ICarsService _carsService;
@@ -25,28 +25,23 @@ namespace McLaren.Web.V0_9.Controller
         /// <summary>
         /// Lists all cars
         /// </summary>
+        /// <param name="carsResourceParameters"></param>
         /// <returns>A list of all the cars</returns>
         /// <response code="200">Returns the list of all cars</response>
         [HttpGet]
         [ProducesResponseType(typeof(List<CarDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromQuery] CarsResourceParameters carsResourceParameters)
         {
-            try
-            {
-                var cars = await _carsService.GetCars(carsResourceParameters);
 
-                return Ok(cars);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            var cars = await _carsService.GetCars(carsResourceParameters);
+
+            return Ok(cars);
         }
 
         /// <summary>
         /// Car with specified id
         /// </summary>
-        /// <param name="carId"></param>
+        
         /// <returns>A car with specified id</returns>
         /// <response code="200">Returns the car with the specified id</response>
         /// <response code="404">If no car was found with the specified id</response>
@@ -55,21 +50,14 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]  
         public async Task<IActionResult> Get(int carId)
         {
-            try
+            var car = await _carsService.GetCar(carId);
+
+            if (car == null)
             {
-                var car = await _carsService.GetCar(carId);
-
-                if (car == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(car);
+                return NotFound();
             }
-            catch (Exception ex)
-            {                
-                return StatusCode(500, ex);
-            }            
+
+            return Ok(car);          
         }
     }
 }

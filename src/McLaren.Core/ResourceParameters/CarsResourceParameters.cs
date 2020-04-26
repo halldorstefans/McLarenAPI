@@ -1,3 +1,5 @@
+using System.ComponentModel;
+
 namespace McLaren.Core.ResourceParameters
 {
     public class CarsResourceParameters

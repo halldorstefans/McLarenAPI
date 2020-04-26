@@ -32,16 +32,9 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(List<GrandPrixDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromQuery] GrandPrixesResourceParameters grandPrixesResourceParameters)
         {
-            try
-            {
-                var grandPrixes = await _grandPrixesService.GetGrandPrixes(grandPrixesResourceParameters);
+            var grandPrixes = await _grandPrixesService.GetGrandPrixes(grandPrixesResourceParameters);
 
-                return Ok(grandPrixes);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            return Ok(grandPrixes);            
         }
 
         /// <summary>
@@ -56,21 +49,14 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]        
         public async Task<IActionResult> Get(int raceId)
         {
-            try
+            var grandPrix = await _grandPrixesService.GetGrandPrix(raceId);
+
+            if (grandPrix == null)
             {
-                var grandPrix = await _grandPrixesService.GetGrandPrix(raceId);
-
-                if (grandPrix == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(grandPrix);
+                return NotFound();
             }
-            catch (Exception ex)
-            {                
-                return StatusCode(500, ex);
-            }            
+
+            return Ok(grandPrix);          
         }
     }
 }

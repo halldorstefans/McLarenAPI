@@ -31,16 +31,9 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(List<DriverDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromQuery] DriversResourceParameters driversResourceParameters)
         {
-            try
-            {
-                var drivers = await _driversService.GetDrivers(driversResourceParameters);
+            var drivers = await _driversService.GetDrivers(driversResourceParameters);
 
-                return Ok(drivers);
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, ex);
-            }
+            return Ok(drivers);
         }
 
         /// <summary>
@@ -54,22 +47,15 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(DriverDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> Get(int driverId)
-        {
-            try
-            {                
-                var driver = await _driversService.GetDriver(driverId);
-                
-                if (driver == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(driver);
+        {            
+            var driver = await _driversService.GetDriver(driverId);
+            
+            if (driver == null)
+            {
+                return NotFound();
             }
-            catch (Exception ex)
-            {                
-                return StatusCode(500, ex);
-            }            
+
+            return Ok(driver);          
         }
     }
 }

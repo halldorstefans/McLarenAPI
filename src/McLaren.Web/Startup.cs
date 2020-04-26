@@ -9,13 +9,20 @@ using McLaren.Infrastructure.Data;
 using McLaren.Infrastructure.Data.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using McLaren.Web.Services;
+using McLaren.Web.Filters;
+using McLaren.Web.Configurations;
 
 namespace McLaren.Web
 {
@@ -33,6 +40,15 @@ namespace McLaren.Web
         {
             services.AddControllers(setupAction =>
             {
+                setupAction.Filters.Add(
+                    new ProducesResponseTypeAttribute(StatusCodes.Status400BadRequest));
+                setupAction.Filters.Add(
+                    new ProducesResponseTypeAttribute(StatusCodes.Status406NotAcceptable));
+                setupAction.Filters.Add(
+                    new ProducesResponseTypeAttribute(StatusCodes.Status500InternalServerError));
+                setupAction.Filters.Add(
+                    new ProducesDefaultResponseTypeAttribute());
+                
                 setupAction.ReturnHttpNotAcceptable = true;
             })
             .AddJsonOptions(options =>
@@ -47,8 +63,25 @@ namespace McLaren.Web
             else
             {
                 services.AddDbContext<McLarenContext>(options =>
-                    options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection")));
+                    options.UseSqlite(Configuration.GetConnectionString("SQLiteConnection"))); 
             }
+
+            services.Configure<ApiBehaviorOptions>(options =>
+            {
+                options.InvalidModelStateResponseFactory = actionContext =>
+                {
+                    var actionExecutingContext =
+                        actionContext as Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext;
+
+                    if (actionContext.ModelState.ErrorCount > 0
+                        && actionExecutingContext?.ActionArguments.Count == actionContext.ActionDescriptor.Parameters.Count)
+                    {
+                        return new UnprocessableEntityObjectResult(actionContext.ModelState);
+                    }
+
+                    return new BadRequestObjectResult(actionContext.ModelState);
+                };
+            });
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
@@ -66,53 +99,48 @@ namespace McLaren.Web
                 var logger = container.GetRequiredService<ILogger<LogService>>();
                 return new LogService() { Logger = logger };
             });        
-
-            services.AddApiVersioning(
-                options =>
-                {
-                    options.ReportApiVersions = true;
-
-                    options.Conventions.Add(new VersionByNamespaceConvention());
-                });
-
+           
             services.AddVersionedApiExplorer(
                 options =>
                 {                    
                     options.GroupNameFormat = "'v'VVV";
 
                     options.SubstituteApiVersionInUrl = true;
-                } );
+                });
 
-            services.AddSwaggerGen(c =>
+            services.AddApiVersioning(
+                options =>
+                {
+                    options.AssumeDefaultVersionWhenUnspecified = true;
+                    options.DefaultApiVersion = new ApiVersion(0, 9);
+                    options.ReportApiVersions = true;
+                    
+                    options.Conventions.Add(new VersionByNamespaceConvention());
+                });
+
+            services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
+            services.AddSwaggerGen(options =>
             {
-                c.SwaggerDoc("v0.9", new OpenApiInfo { Title = "McLaren API", Version = "v0.9" });
-
+                options.OperationFilter<SwaggerDefaultValues>();
+                
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                c.IncludeXmlComments(xmlPath);
+                options.IncludeXmlComments(xmlPath);
             });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
-            app.UseSwagger(c =>
-            {
-                c.RouteTemplate = "docs/{documentName}/docs.json";
-            });
-
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/docs/v0.9/docs.json", "McLaren API V0.9");
-                c.RoutePrefix = "docs";
-            });
-
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
+            
+            app.UseStaticFiles();
 
-            app.UseHttpsRedirection();
+            app.UseHttpsRedirection();            
 
             app.UseRouting();
 
@@ -121,6 +149,25 @@ namespace McLaren.Web
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+            });
+
+            app.UseSwagger(options =>
+            {
+                options.RouteTemplate = "docs/{documentName}/docs.json";
+            });
+
+            app.UseSwaggerUI(options =>
+            {
+                options.DocumentTitle = "McLaren F1 API Docs";
+                options.InjectStylesheet("/swagger-ui/custom.css");
+
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                {
+                    options.SwaggerEndpoint($"/docs/" +
+                        $"{description.GroupName}/docs.json",
+                        description.GroupName.ToUpperInvariant());
+                }
+                options.RoutePrefix = "docs";                
             });
         }
     }

@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Logging;
 
-namespace McLaren.Web
+namespace McLaren.Web.Services
 {
     public interface ILogService
     {
