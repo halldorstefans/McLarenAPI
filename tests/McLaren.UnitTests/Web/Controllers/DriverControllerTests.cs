@@ -9,6 +9,7 @@ using Moq;
 using Xunit;
 using FluentAssertions;
 using McLaren.Core.ResourceParameters;
+using Microsoft.Extensions.Logging;
 
 namespace McLaren.UnitTests.Web.Controllers
 {
@@ -21,7 +22,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockDriver = MockDriverData.GetAllModelListAsync();
             DriversResourceParameters parameters = new DriversResourceParameters{};
             var mockDriverService = new MockDriverService().MockGetAll(mockDriver);
-            var controller = new DriversController(mockDriverService.Object);
+            var mockLogging = new Mock<ILogger<DriversController>>();
+            var controller = new DriversController(mockDriverService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -38,7 +40,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockDriver = MockDriverData.GetEmptyModelListAsync();
             DriversResourceParameters parameters = new DriversResourceParameters{};
             var mockDriverService = new MockDriverService().MockGetAll(mockDriver);
-            var controller = new DriversController(mockDriverService.Object);
+            var mockLogging = new Mock<ILogger<DriversController>>();
+            var controller = new DriversController(mockDriverService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -57,7 +60,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockDriver = MockDriverData.GetEmptyModelListAsync();
             DriversResourceParameters parameters = new DriversResourceParameters{Name = "Niki"};
             var mockDriverService = new MockDriverService().MockGetAll(mockDriver);
-            var controller = new DriversController(mockDriverService.Object);
+            var mockLogging = new Mock<ILogger<DriversController>>();
+            var controller = new DriversController(mockDriverService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(parameters);
@@ -74,7 +78,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockDriver = MockDriverData.GetEmptyModelListAsync();
             DriversResourceParameters parameters = new DriversResourceParameters{Name = "Vettel"};
             var mockDriverService = new MockDriverService().MockGetAll(mockDriver);
-            var controller = new DriversController(mockDriverService.Object);
+            var mockLogging = new Mock<ILogger<DriversController>>();
+            var controller = new DriversController(mockDriverService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(parameters);
@@ -93,7 +98,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockDriverId = 13;
             var mockDriver = MockDriverData.GetSingleModelAsync();
             var mockDriverService = new MockDriverService().MockGetById(mockDriver);
-            var controller = new DriversController(mockDriverService.Object);
+            var mockLogging = new Mock<ILogger<DriversController>>();
+            var controller = new DriversController(mockDriverService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(mockDriverId);
@@ -110,7 +116,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockDriverId = 10;
             var mockDriver = MockDriverData.GetSingleEmptyModelAsync();
             var mockDriverService = new MockDriverService().MockGetById(mockDriver);
-            var controller = new DriversController(mockDriverService.Object);
+            var mockLogging = new Mock<ILogger<DriversController>>();
+            var controller = new DriversController(mockDriverService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(mockDriverId);

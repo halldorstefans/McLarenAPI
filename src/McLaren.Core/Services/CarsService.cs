@@ -33,6 +33,7 @@ namespace McLaren.Core.Services
 
                 if (car == null)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, $"Could not find Car with id: { id }", id);
                     return null;
                 }
 
@@ -54,7 +55,8 @@ namespace McLaren.Core.Services
                 var cars = await _carsRepository.GetAll();
 
                 if (cars.Count() == 0)
-                {                
+                {
+                    _logger.LogInformation(LoggingEvents.GetItem, "No Cars found", null);
                     return Enumerable.Empty<CarDto>();
                 }
                 
@@ -101,16 +103,19 @@ namespace McLaren.Core.Services
                     var yearFilter = Int32.Parse(carsResourceParameters.Year.Trim());
                     if (cars.Count() == 0)
                     {
+                        _logger.LogInformation(LoggingEvents.GetItem, "No Cars found with year filter", null);
                         cars = await _carsRepository.GetByYear(yearFilter);
                     }
                     else
                     {
+                        _logger.LogInformation(LoggingEvents.GetItem, "Found Cars found with year filter", null);
                         cars = cars.Where(c => c.fromyear <= yearFilter && c.toyear >= yearFilter);
                     }
                 }
 
                 if (cars.Count() == 0)
                 {                
+                    _logger.LogInformation(LoggingEvents.GetItem, "No Cars found", null);
                     return Enumerable.Empty<CarDto>();
                 }
                 

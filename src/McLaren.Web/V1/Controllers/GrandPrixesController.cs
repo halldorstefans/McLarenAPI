@@ -8,6 +8,7 @@ using McLaren.Core.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using McLaren.Core.ResourceParameters;
+using Microsoft.Extensions.Logging;
 
 namespace McLaren.Web.V0_9.Controller
 {
@@ -17,10 +18,12 @@ namespace McLaren.Web.V0_9.Controller
     public class GrandPrixesController :  ControllerBase
     {
         private readonly IGrandPrixesService _grandPrixesService;
+        private readonly ILogger<GrandPrixesController> _logger;
 
-        public GrandPrixesController(IGrandPrixesService grandPrixesService)
+        public GrandPrixesController(IGrandPrixesService grandPrixesService, ILogger<GrandPrixesController> logger)
         {
             _grandPrixesService = grandPrixesService;
+            _logger = logger;
         }
 
         /// <summary>
@@ -32,6 +35,7 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(List<GrandPrixDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> Get([FromQuery] GrandPrixesResourceParameters grandPrixesResourceParameters)
         {
+            _logger.LogInformation("API ENTRY: Inside get all grand prixes API call.");
             var grandPrixes = await _grandPrixesService.GetGrandPrixes(grandPrixesResourceParameters);
 
             return Ok(grandPrixes);            
@@ -49,10 +53,12 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)]        
         public async Task<IActionResult> Get(int raceId)
         {
+            _logger.LogInformation("API ENTRY: Inside get grand prix by Id API call.");
             var grandPrix = await _grandPrixesService.GetGrandPrix(raceId);
 
             if (grandPrix == null)
             {
+                _logger.LogInformation("No grand prix found in API call.");
                 return NotFound();
             }
 

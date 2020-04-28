@@ -38,6 +38,7 @@ namespace McLaren.Core.Services
 
                 if (grandPrixes.Count() == 0)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, $"Could not find Grand Prix with id: { raceId }", raceId);
                     return null;
                 }               
                 
@@ -60,6 +61,7 @@ namespace McLaren.Core.Services
 
                 if (grandPrixes.Count() == 0)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, "No Grands Prixes found", null);
                     return null;
                 }
 
@@ -110,6 +112,7 @@ namespace McLaren.Core.Services
 
                 if (grandPrixes.Count() == 0)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, "No Grands Prixes found", null);
                     return Enumerable.Empty<GrandPrixDto>();
                 }
 

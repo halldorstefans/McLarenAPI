@@ -9,6 +9,7 @@ using Moq;
 using Xunit;
 using FluentAssertions;
 using McLaren.Core.ResourceParameters;
+using Microsoft.Extensions.Logging;
 
 namespace McLaren.UnitTests.Web.Controllers
 {
@@ -21,7 +22,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockGrandPrix = MockGrandPrixData.GetAllModelListAsync();
             GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{};
             var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
-            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            var mockLogging = new Mock<ILogger<GrandPrixesController>>();
+            var controller = new GrandPrixesController(mockGrandPrixService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(parameters);
@@ -38,7 +40,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockGrandPrix = MockGrandPrixData.GetEmptyModelListAsync();
             GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{};
             var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
-            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            var mockLogging = new Mock<ILogger<GrandPrixesController>>();
+            var controller = new GrandPrixesController(mockGrandPrixService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -57,7 +60,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockGrandPrix = MockGrandPrixData.GetAllModelListAsync();
             GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{Country = "Spain", Year = "1970"};
             var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
-            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            var mockLogging = new Mock<ILogger<GrandPrixesController>>();
+            var controller = new GrandPrixesController(mockGrandPrixService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -74,7 +78,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockGrandPrix = MockGrandPrixData.GetEmptyModelListAsync();
             GrandPrixesResourceParameters parameters = new GrandPrixesResourceParameters{Country = "USA", Year = "2010"};
             var mockGrandPrixService = new MockGrandPrixService().MockGetAll(mockGrandPrix);
-            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            var mockLogging = new Mock<ILogger<GrandPrixesController>>();
+            var controller = new GrandPrixesController(mockGrandPrixService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(parameters);
@@ -93,7 +98,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockGrandPrixId = 15;
             var mockGrandPrix = MockGrandPrixData.GetAllModelListAsync();
             var mockGrandPrixService = new MockGrandPrixService().MockGetById(mockGrandPrix);
-            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            var mockLogging = new Mock<ILogger<GrandPrixesController>>();
+            var controller = new GrandPrixesController(mockGrandPrixService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(mockGrandPrixId);
@@ -112,7 +118,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockGrandPrixId = 5;
             var mockGrandPrix = MockGrandPrixData.GetNullModelListAsync();
             var mockGrandPrixService = new MockGrandPrixService().MockGetById(mockGrandPrix);
-            var controller = new GrandPrixesController(mockGrandPrixService.Object);
+            var mockLogging = new Mock<ILogger<GrandPrixesController>>();
+            var controller = new GrandPrixesController(mockGrandPrixService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(mockGrandPrixId);

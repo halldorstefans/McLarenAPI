@@ -9,6 +9,7 @@ using Moq;
 using Xunit;
 using FluentAssertions;
 using McLaren.Core.ResourceParameters;
+using Microsoft.Extensions.Logging;
 
 namespace McLaren.UnitTests.Web.Controllers
 {
@@ -21,7 +22,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockCar = MockCarData.GetAllModelListAsync();
             CarsResourceParameters parameters = new CarsResourceParameters{};
             var mockCarService = new MockCarService().MockGetAll(mockCar);
-            var controller = new CarsController(mockCarService.Object);
+            var mockLogging = new Mock<ILogger<CarsController>>();
+            var controller = new CarsController(mockCarService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -38,7 +40,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockCar = MockCarData.GetEmptyModelListAsync();
             CarsResourceParameters parameters = new CarsResourceParameters{};
             var mockCarService = new MockCarService().MockGetAll(mockCar);
-            var controller = new CarsController(mockCarService.Object);
+            var mockLogging = new Mock<ILogger<CarsController>>();
+            var controller = new CarsController(mockCarService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -57,7 +60,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockCar = MockCarData.GetAllModelListAsync();
             CarsResourceParameters parameters = new CarsResourceParameters{Name = "MCL35", Year = "2020"};
             var mockCarService = new MockCarService().MockGetAll(mockCar);
-            var controller = new CarsController(mockCarService.Object);
+            var mockLogging = new Mock<ILogger<CarsController>>();
+            var controller = new CarsController(mockCarService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -74,7 +78,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockCar = MockCarData.GetEmptyModelListAsync();
             CarsResourceParameters parameters = new CarsResourceParameters{Name = "M2B", Year = "1966"};
             var mockCarService = new MockCarService().MockGetAll(mockCar);
-            var controller = new CarsController(mockCarService.Object);
+            var mockLogging = new Mock<ILogger<CarsController>>();
+            var controller = new CarsController(mockCarService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(parameters);
@@ -93,7 +98,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockCarYear = 2020;
             var mockCar = MockCarData.GetSingleModelAsync();
             var mockCarService = new MockCarService().MockGetById(mockCar);
-            var controller = new CarsController(mockCarService.Object);
+            var mockLogging = new Mock<ILogger<CarsController>>();
+            var controller = new CarsController(mockCarService.Object, mockLogging.Object);
             
             // Act
             var result = await controller.Get(mockCarYear);
@@ -110,7 +116,8 @@ namespace McLaren.UnitTests.Web.Controllers
             var mockCarYear = 1980;
             var mockCar = MockCarData.GetSingleEmptyModelAsync();
             var mockCarService = new MockCarService().MockGetById(mockCar);
-            var controller = new CarsController(mockCarService.Object);
+            var mockLogging = new Mock<ILogger<CarsController>>();
+            var controller = new CarsController(mockCarService.Object, mockLogging.Object);
 
             // Act
             var result = await controller.Get(mockCarYear);

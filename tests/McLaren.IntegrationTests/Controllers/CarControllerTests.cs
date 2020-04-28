@@ -17,7 +17,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_AllCars()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/cars");
+            var response = await _client.GetAsync("/api/formula1/v0.9/cars");
             
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,7 +29,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_OneCarFromId()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/cars/5");
+            var response = await _client.GetAsync("/api/formula1/v0.9/cars/5");
             
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -41,7 +41,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_OneCarFromName()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/cars?name=m7a");
+            var response = await _client.GetAsync("/api/formula1/v0.9/cars?name=m7a");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -53,7 +53,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_EmptyFromName()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/cars?name=m6a");
+            var response = await _client.GetAsync("/api/formula1/v0.9/cars?name=m6a");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -65,7 +65,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_CarsFromYear()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/cars?year=1968");
+            var response = await _client.GetAsync("/api/formula1/v0.9/cars?year=1968");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -77,7 +77,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_EmptyFromYear()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/cars?year=1950");
+            var response = await _client.GetAsync("/api/formula1/v0.9/cars?year=1950");
             
             // Assert            
             response.StatusCode.Should().Be(HttpStatusCode.OK);            

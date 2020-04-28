@@ -17,7 +17,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_AllDrivers()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/Drivers");
+            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,7 +29,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_OneDriverFromName()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/Drivers?name=van rooyen");
+            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers?name=van rooyen");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -44,7 +44,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_EmptyFromName()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/Drivers?name=hamilton");
+            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers?name=hamilton");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -56,7 +56,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_DriversFromId()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/Drivers/1");
+            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers/1");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -68,7 +68,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_NotFoundFromId()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/Drivers/100");
+            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers/100");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);

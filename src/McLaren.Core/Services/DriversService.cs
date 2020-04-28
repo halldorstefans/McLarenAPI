@@ -34,6 +34,7 @@ namespace McLaren.Core.Services
 
                 if (driver == null)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, $"Could not find Driver with id: { id }", id);
                     return null;
                 }
 
@@ -57,6 +58,7 @@ namespace McLaren.Core.Services
 
                 if (drivers.Count() == 0)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, "No Drivers found", null);
                     return Enumerable.Empty<DriverDto>();
                 }
 
@@ -92,6 +94,7 @@ namespace McLaren.Core.Services
                 
                 if (drivers.Count() == 0)
                 {
+                    _logger.LogInformation(LoggingEvents.GetItem, "No Drivers found", null);
                     return Enumerable.Empty<DriverDto>();
                 }
 

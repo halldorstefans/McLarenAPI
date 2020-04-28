@@ -16,13 +16,15 @@ using Microsoft.AspNetCore.Mvc.Versioning.Conventions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using McLaren.Web.Services;
 using McLaren.Web.Filters;
 using McLaren.Web.Configurations;
+using McLaren.Infrastructure;
+using McLaren.Infrastructure.Filters;
+using McLaren.Infrastructure.Middleware.Logging;
 
 namespace McLaren.Web
 {
@@ -38,18 +40,20 @@ namespace McLaren.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddControllers(setupAction =>
+            services.AddControllers(options =>
             {
-                setupAction.Filters.Add(
+                options.Filters.Add(typeof(TrackActionPerformanceFilter));
+
+                options.Filters.Add(
                     new ProducesResponseTypeAttribute(StatusCodes.Status400BadRequest));
-                setupAction.Filters.Add(
+                options.Filters.Add(
                     new ProducesResponseTypeAttribute(StatusCodes.Status406NotAcceptable));
-                setupAction.Filters.Add(
+                options.Filters.Add(
                     new ProducesResponseTypeAttribute(StatusCodes.Status500InternalServerError));
-                setupAction.Filters.Add(
+                options.Filters.Add(
                     new ProducesDefaultResponseTypeAttribute());
                 
-                setupAction.ReturnHttpNotAcceptable = true;
+                options.ReturnHttpNotAcceptable = true;                
             })
             .AddJsonOptions(options =>
                 options.JsonSerializerOptions.ReferenceHandling = ReferenceHandling.Preserve
@@ -82,6 +86,8 @@ namespace McLaren.Web
                     return new BadRequestObjectResult(actionContext.ModelState);
                 };
             });
+
+            services.AddSingleton<IScopeInformation, ScopeInformation>();
 
             services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 
@@ -133,10 +139,7 @@ namespace McLaren.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider apiVersionDescriptionProvider)
         {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
+            app.UseApiExceptionHandler();
             
             app.UseStaticFiles();
 

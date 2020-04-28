@@ -17,7 +17,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_AllGrandPrixes()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -29,7 +29,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_GrandPrixesFromId()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes/10");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes/10");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -41,7 +41,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_NotFoundFromId()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes/1000");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes/1000");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.NotFound);
@@ -51,7 +51,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_GrandPrixesFromYear()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes?year=1969");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?year=1969");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -63,7 +63,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_EmptyFromYear()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes?year=1950");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?year=1950");
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var grandPrixes = JsonConvert.DeserializeObject<IEnumerable<GrandPrixDto>>(await response.Content.ReadAsStringAsync());
             grandPrixes.Should().HaveCount(0);
@@ -73,7 +73,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_GrandPrixesFromCountry()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes?country=spain");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?country=spain");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -83,7 +83,7 @@ namespace McLaren.IntegrationTests
         public async void Get_Should_Return_EmptyFromCountry()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v1/GrandPrixes?country=hello");
+            var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?country=hello");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
