@@ -36,8 +36,10 @@ You can read my [blog post about it here](https://www.halldorstefans.com/buildin
 ### Built With
 
 * [.NET Core](https://docs.microsoft.com/en-us/dotnet/core/)
-* [Azure Web App](https://azure.microsoft.com/en-us/services/app-service/web/)
 * [Entity Framework Core](https://docs.microsoft.com/en-us/ef/core/)
+* [Azure Web App](https://azure.microsoft.com/en-us/services/app-service/web/)
+* [Azure Application Insights](https://docs.microsoft.com/en-us/azure/azure-monitor/app/asp-net-core)
+* [Serilog](https://serilog.net/)
 * [Swagger](https://swagger.io/)
 * [xUnit](https://xunit.net/)
 

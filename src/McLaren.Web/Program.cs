@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -20,7 +21,8 @@ namespace McLaren.Web
         {
             Log.Logger = new LoggerConfiguration()
                .ReadFrom.Configuration(Configuration)
-               .WriteTo.File(new JsonFormatter(), @"mclaren-log.json", shared: true)
+               //.WriteTo.File(new JsonFormatter(), @"mclaren-log.json", shared: true)
+               .WriteTo.ApplicationInsights(TelemetryConfiguration.CreateDefault(), TelemetryConverter.Traces)
                .CreateLogger();
 
             try
