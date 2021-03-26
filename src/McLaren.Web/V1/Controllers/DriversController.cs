@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using McLaren.Core.Interfaces;
 using McLaren.Core.Models;
@@ -12,7 +11,8 @@ using Microsoft.Extensions.Logging;
 namespace McLaren.Web.V0_9.Controller
 {    
     [ApiController]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Route("api/formula1/v{version:apiVersion}/[controller]")]
     public class DriversController :  ControllerBase
     {
@@ -51,7 +51,7 @@ namespace McLaren.Web.V0_9.Controller
         [ProducesResponseType(typeof(DriverDto), StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(void), StatusCodes.Status404NotFound)] 
         public async Task<IActionResult> Get(int driverId)
-        {            
+        {
             _logger.LogInformation("API ENTRY: Inside get driver by Id API call.");
             var driver = await _driversService.GetDriver(driverId);
             

@@ -1,6 +1,5 @@
-using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.Net.Mime;
 using System.Threading.Tasks;
 using McLaren.Core.Interfaces;
 using McLaren.Core.Models;
@@ -12,7 +11,8 @@ using Microsoft.Extensions.Logging;
 namespace McLaren.Web.V0_9.Controller
 {
     [ApiController]
-    [Produces("application/json")]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Route("api/formula1/v{version:apiVersion}/[controller]")]    
     public class CarsController :  ControllerBase
     {

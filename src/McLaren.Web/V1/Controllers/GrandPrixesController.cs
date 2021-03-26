@@ -1,7 +1,4 @@
-using System;
-using System.Linq;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading.Tasks;
 using McLaren.Core.Interfaces;
 using McLaren.Core.Models;
@@ -9,11 +6,13 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using McLaren.Core.ResourceParameters;
 using Microsoft.Extensions.Logging;
+using System.Net.Mime;
 
 namespace McLaren.Web.V0_9.Controller
 {
-    [Produces("application/json")]
     [ApiController]
+    [Produces(MediaTypeNames.Application.Json)]
+    [Consumes(MediaTypeNames.Application.Json)]
     [Route("api/formula1/v{version:apiVersion}/[controller]")]
     public class GrandPrixesController :  ControllerBase
     {

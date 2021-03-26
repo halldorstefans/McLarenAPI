@@ -58,7 +58,7 @@ namespace McLaren.Web
                 options.ReturnHttpNotAcceptable = true;                
             })
             .AddJsonOptions(options =>
-                options.JsonSerializerOptions.ReferenceHandling = ReferenceHandling.Preserve
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.Preserve
             );
             
             if(Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Production")
