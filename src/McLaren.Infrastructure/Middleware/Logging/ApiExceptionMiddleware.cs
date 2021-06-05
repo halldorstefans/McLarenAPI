@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
+using System.Text.Json;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -49,7 +49,7 @@ namespace McLaren.Infrastructure.Middleware.Logging
 
             _logger.LogError(exception, "Something went wrong! " + innerExMessage  + $" -- { error.Id }.");           
 
-            var result = JsonConvert.SerializeObject(error);
+            var result = JsonSerializer.Serialize(error);
             context.Response.ContentType = "application/json";
             context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
             return context.Response.WriteAsync(result);

@@ -67,8 +67,6 @@ public class AppInsightsFilter : ITelemetryProcessor
         {
             var ext = Path.GetExtension(request.Url.ToString());
 
-            Console.WriteLine(ext);
-
             if (ext != string.Empty && ExcludedFormats.ContainsKey(ext))
             {
                 return true;                

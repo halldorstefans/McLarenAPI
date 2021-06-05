@@ -7,9 +7,6 @@
   <p align="center">
     Unofficial API for McLaren Formula 1
     <br />
-    <a href="https://mclarenapi.azurewebsites.net/docs/index.html"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
     <a href="https://github.com/halldorstefans/McLarenAPI/issues">Report Bug</a>
     ·
     <a href="https://github.com/halldorstefans/McLarenAPI/issues">Request Feature</a>
@@ -21,7 +18,9 @@
 
 * [About the Project](#mclaren-api)
   * [Built With](#built-with)
-* [Usage](#usage)
+* [Getting Started](#getting-started)
+  * [Prerequisites](#prerequisites)
+  * [Installation](#installation)
 * [License](#license)
 * [Contact](#contact)
 * [Acknowledgements](#acknowledgements)
@@ -43,10 +42,22 @@ You can read my [blog post about it here](https://www.halldorstefans.com/buildin
 * [Swagger](https://swagger.io/)
 * [xUnit](https://xunit.net/)
 
-<!-- USAGE EXAMPLES -->
-## Usage
+<!-- GETTING STARTED -->
+## Getting Started
 
-_For examples, please refer to the [Documentation](https://mclarenapi.azurewebsites.net/docs/index.html)_
+### Prerequisites
+
+* .NET 5
+
+### Installation
+
+```sh
+$ git clone https://github.com/halldorstefans/McLarenAPI.git
+$ cd McLarenAPI/src/McLaren.Web/
+$ dotnet run
+...
+Go to "https://localhost:5001/docs/index.html".
+```
 
 <!-- LICENSE -->
 ## License
