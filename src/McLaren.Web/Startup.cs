@@ -41,6 +41,7 @@ namespace McLaren.Web
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddApplicationInsightsTelemetry();
+            services.AddApplicationInsightsTelemetryProcessor<AppInsightsFilter>();
 
             services.AddControllers(options =>
             {
