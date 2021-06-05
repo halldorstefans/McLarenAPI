@@ -1,6 +1,6 @@
 {
     "ConnectionStrings": {
-      "SQLiteConnection": "Data Source=../../mclaren.db;"
+      "SQLiteConnection": "Data Source=../../../mclaren_backup.db;"
     },
     "Logging": {
       "LogLevel": {

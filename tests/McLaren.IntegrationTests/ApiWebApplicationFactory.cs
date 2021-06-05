@@ -11,12 +11,14 @@ namespace McLaren.IntegrationTests
 {
     public class ApiWebApplicationFactory : WebApplicationFactory<Startup>
     {
+        public IConfiguration Configuration { get; private set; }
+        
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
             builder.ConfigureAppConfiguration(config =>        
             {            
-                var integrationConfig = new ConfigurationBuilder().AddJsonFile("appsettings.json").Build();
-                config.AddConfiguration(integrationConfig);        
+                Configuration = new ConfigurationBuilder().AddJsonFile("integrationsettings.json").Build();
+                config.AddConfiguration(Configuration);        
             });
 
             builder.ConfigureTestServices(services =>

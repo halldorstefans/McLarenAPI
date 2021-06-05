@@ -1,4 +1,3 @@
-using System;
 using McLaren.Core.Models;
 
 namespace McLaren.Core.Entities

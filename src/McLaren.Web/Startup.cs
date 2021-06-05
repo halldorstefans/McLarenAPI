@@ -156,6 +156,17 @@ namespace McLaren.Web
                 endpoints.MapControllers();
             });
 
+            app.UseReDoc(options => 
+            {
+                options.RoutePrefix = "redocs";
+                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                {
+                    options.SpecUrl($"/docs/" +
+                        $"{description.GroupName}/docs.json");
+                }
+                options.ExpandResponses("200,201");
+            });
+
             app.UseSwagger(options =>
             {
                 options.RouteTemplate = "docs/{documentName}/docs.json";

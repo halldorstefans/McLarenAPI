@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using McLaren.Core.Models;
 
 namespace McLaren.Core.Entities

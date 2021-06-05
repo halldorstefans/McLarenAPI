@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using McLaren.Core.Models;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_AllCars()
+        public async Task Get_Should_Return_AllCars()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/cars");
@@ -22,11 +23,11 @@ namespace McLaren.IntegrationTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var cars = JsonConvert.DeserializeObject<IEnumerable<CarDto>>(await response.Content.ReadAsStringAsync());
-            cars.Should().HaveCount(6);
+            cars.Should().HaveCount(62);
         }
 
         [Fact]
-        public async void Get_Should_Return_OneCarFromId()
+        public async Task Get_Should_Return_OneCarFromId()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/cars/5");
@@ -38,7 +39,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_OneCarFromName()
+        public async Task Get_Should_Return_OneCarFromName()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/cars?name=m7a");
@@ -50,7 +51,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_EmptyFromName()
+        public async Task Get_Should_Return_EmptyFromName()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/cars?name=m6a");
@@ -62,7 +63,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_CarsFromYear()
+        public async Task Get_Should_Return_CarsFromYear()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/cars?year=1968");
@@ -74,7 +75,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_EmptyFromYear()
+        public async Task Get_Should_Return_EmptyFromYear()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/cars?year=1950");

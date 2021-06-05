@@ -8,7 +8,6 @@ using McLaren.Core.Interfaces.Repositories;
 using McLaren.Core.Models;
 using McLaren.Core.Constants;
 using McLaren.Core.ResourceParameters;
-using McLaren.Core.Entities;
 using System.Globalization;
 
 namespace McLaren.Core.Services

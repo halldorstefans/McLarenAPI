@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using McLaren.Core.Models;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_AllDrivers()
+        public async Task Get_Should_Return_AllDrivers()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/Drivers");
@@ -22,11 +23,11 @@ namespace McLaren.IntegrationTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var Drivers = JsonConvert.DeserializeObject<IEnumerable<DriverDto>>(await response.Content.ReadAsStringAsync());
-            Drivers.Should().HaveCount(7);
+            Drivers.Should().HaveCount(57);
         }
 
         [Fact]
-        public async void Get_Should_Return_OneDriverFromName()
+        public async Task Get_Should_Return_OneDriverFromName()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/Drivers?name=van rooyen");
@@ -41,10 +42,10 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_EmptyFromName()
+        public async Task Get_Should_Return_EmptyFromName()
         {
             // Act
-            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers?name=hamilton");
+            var response = await _client.GetAsync("/api/formula1/v0.9/Drivers?name=beckham");
 
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
@@ -53,7 +54,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_DriversFromId()
+        public async Task Get_Should_Return_DriversFromId()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/Drivers/1");
@@ -65,7 +66,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_NotFoundFromId()
+        public async Task Get_Should_Return_NotFoundFromId()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/Drivers/100");

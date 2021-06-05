@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Net;
+using System.Threading.Tasks;
 using FluentAssertions;
 using McLaren.Core.Models;
 using Newtonsoft.Json;
@@ -14,7 +15,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_AllGrandPrixes()
+        public async Task Get_Should_Return_AllGrandPrixes()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes");
@@ -22,11 +23,11 @@ namespace McLaren.IntegrationTests
             // Assert
             response.StatusCode.Should().Be(HttpStatusCode.OK);
             var GrandPrixs = JsonConvert.DeserializeObject<IEnumerable<GrandPrixDto>>(await response.Content.ReadAsStringAsync());
-            GrandPrixs.Should().HaveCount(33);
+            GrandPrixs.Should().HaveCount(863);
         }
 
         [Fact]
-        public async void Get_Should_Return_GrandPrixesFromId()
+        public async Task Get_Should_Return_GrandPrixesFromId()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes/10");
@@ -38,7 +39,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_NotFoundFromId()
+        public async Task Get_Should_Return_NotFoundFromId()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes/1000");
@@ -48,7 +49,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_GrandPrixesFromYear()
+        public async Task Get_Should_Return_GrandPrixesFromYear()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?year=1969");
@@ -60,7 +61,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_EmptyFromYear()
+        public async Task Get_Should_Return_EmptyFromYear()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?year=1950");
@@ -70,7 +71,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_GrandPrixesFromCountry()
+        public async Task Get_Should_Return_GrandPrixesFromCountry()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?country=spain");
@@ -80,7 +81,7 @@ namespace McLaren.IntegrationTests
         }
 
         [Fact]
-        public async void Get_Should_Return_EmptyFromCountry()
+        public async Task Get_Should_Return_EmptyFromCountry()
         {
             // Act
             var response = await _client.GetAsync("/api/formula1/v0.9/GrandPrixes?country=hello");

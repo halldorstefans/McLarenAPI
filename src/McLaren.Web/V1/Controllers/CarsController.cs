@@ -44,7 +44,6 @@ namespace McLaren.Web.V0_9.Controller
         /// <summary>
         /// Car with specified id
         /// </summary>
-        
         /// <returns>A car with specified id</returns>
         /// <response code="200">Returns the car with the specified id</response>
         /// <response code="404">If no car was found with the specified id</response>
